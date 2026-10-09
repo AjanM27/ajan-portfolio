@@ -1,32 +1,52 @@
-# React + TypeScript + Vite
+# Ajan Muthuraj — Engineering Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+[![Live portfolio](https://img.shields.io/badge/Live_Portfolio-Open-0F766E?style=for-the-badge)](https://ajanm27.github.io/ajan-portfolio/)
+[![GitHub Pages](https://img.shields.io/badge/Deployed_with-GitHub_Pages-222?style=for-the-badge&logo=github)](https://github.com/AjanM27/ajan-portfolio/actions/workflows/deploy-pages.yml)
 
-Currently, two official plugins are available:
+An interactive portfolio presenting my work across robotics, autonomous
+systems, motion planning, multi-robot navigation, AI, and embedded engineering.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Highlights
 
-## React Compiler
+- Evidence-linked project archive covering planning, SLAM, swarm navigation,
+  simulation, AI, and hardware prototypes.
+- Interactive technical-skills constellation.
+- Browser-based RRT/RRT* and A* planning playground.
+- Professional experience, education, competition work, and contact channels.
+- Responsive, accessible interface designed for desktop and mobile viewing.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technology
 
-## Expanding the Oxlint configuration
+- React 19 and TypeScript
+- Vite
+- Vitest and Testing Library
+- Lucide icons
+- GitHub Actions and GitHub Pages
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Local development
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+~~~bash
+npm ci
+npm run dev
+~~~
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Quality checks:
+
+~~~bash
+npm run lint
+npm test
+npm run build
+~~~
+
+## Deployment
+
+Pushes to `main` are built and deployed automatically by
+[the Pages workflow](.github/workflows/deploy-pages.yml). Vite uses the
+`/ajan-portfolio/` base path so generated assets resolve correctly on the
+GitHub Pages project site.
+
+## Links
+
+- [Live portfolio](https://ajanm27.github.io/ajan-portfolio/)
+- [GitHub profile](https://github.com/AjanM27)
+- [LinkedIn](https://www.linkedin.com/in/ajanmuthuraj/)
