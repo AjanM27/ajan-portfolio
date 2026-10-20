@@ -16,6 +16,7 @@ describe('portfolio interactions', () => {
   beforeEach(() => {
     vi.stubGlobal('IntersectionObserver', IntersectionObserverStub)
     vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})))
+    Element.prototype.scrollIntoView = vi.fn()
   })
 
   it('switches project category and case-study tabs', () => {
@@ -49,10 +50,21 @@ describe('portfolio interactions', () => {
     render(<App />)
 
     expect(screen.getByLabelText('Five-layer robotics system cross-section')).toBeInTheDocument()
-    expect(screen.getByText('Mechanism')).toBeInTheDocument()
+    expect(screen.getByText('Mechanics')).toBeInTheDocument()
     expect(screen.getByText('Perception')).toBeInTheDocument()
     expect(screen.getAllByText(/Systems Engineer/).length).toBeGreaterThanOrEqual(2)
-    expect(screen.getByText(/A robot becomes real where the diagram stops/)).toBeInTheDocument()
+    expect(screen.getByText(/The handoff is part of the system/)).toBeInTheDocument()
     expect(screen.queryByText(/Upcoming systems-engineering role/)).not.toBeInTheDocument()
+  })
+
+  it('exposes mobile navigation state and closes the menu after navigation', () => {
+    render(<App />)
+
+    const menu = screen.getByRole('button', { name: 'Toggle navigation' })
+    expect(menu).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(menu)
+    expect(menu).toHaveAttribute('aria-expanded', 'true')
+    fireEvent.click(screen.getByRole('button', { name: 'Work' }))
+    expect(menu).toHaveAttribute('aria-expanded', 'false')
   })
 })

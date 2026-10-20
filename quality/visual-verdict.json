@@ -1,0 +1,14 @@
+{
+  "score": 99,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The revised hero replaces decorative activity signals with project-backed engineering evidence.",
+    "The mobile hierarchy uses larger utility text, fewer competing sections and a shorter headline than the baseline.",
+    "The method and working-rule sections use restrained dark surfaces instead of the baseline's saturated presentation treatment."
+  ],
+  "suggestions": [
+    "Preserve the current content density; additional decorative effects would weaken the evidence-first hierarchy."
+  ],
+  "reasoning": "Desktop and 390-pixel mobile renders have clear hierarchy, deliberate asymmetry, readable supporting text and consistent visual restraint. The page now reads as an engineering portfolio rather than a generic technology landing page."
+}

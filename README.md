@@ -1,17 +1,18 @@
-# Ajan Muthuraj — Robotics & Autonomous Systems Portfolio
+# Ajan Muthuraj — Robotics Systems Portfolio
 
 [![Live portfolio](https://img.shields.io/badge/Live_Portfolio-Open-0F766E?style=for-the-badge)](https://ajanm27.github.io/ajan-portfolio/)
 [![GitHub Pages](https://img.shields.io/badge/Deployed_with-GitHub_Pages-222?style=for-the-badge&logo=github)](https://github.com/AjanM27/ajan-portfolio/actions/workflows/deploy-pages.yml)
 
-An interactive, recruiter-oriented portfolio presenting robotics work from
-sensing to action: UAV autonomy, safe reinforcement learning, multi-robot
-mapping, motion planning, humanoid navigation, perception, and manipulation.
+A recruiter-oriented portfolio for Ajan Muthuraj, Systems Engineer at DLTX and
+IIT Madras Mechanical Engineering graduate. The selected work covers UAV
+autonomy, safe reinforcement learning, multi-robot mapping, motion planning,
+humanoid navigation, perception, and manipulation.
 
 ## Highlights
 
-- Scroll-led one-page narrative with sticky transitions and motion-aware reveals.
+- Evidence-first one-page narrative with motion-aware reveals.
 - Keyboard-accessible tabs for flagship work, autonomy, multi-robot systems,
-  embodied robotics, and the sense–locate–decide–act–collaborate loop.
+  embodied robotics, and the four-step engineering method.
 - Evidence-linked project case studies with clear role and collaboration labels.
 - Live public GitHub feed that updates from the GitHub API without a redeploy.
 - Research, education, competition work, systems-engineering trajectory, and
@@ -48,6 +49,15 @@ Quality checks:
 npm run lint
 npm test
 npm run build
+~~~
+
+The repository also includes a fixed weighted scorecard under `quality/`.
+It records the pre-improvement baseline, final assessment, and strict visual
+verdict. Recalculate either recorded assessment with:
+
+~~~bash
+npm run score:quality -- quality/baseline.json
+npm run score:quality -- quality/final.json
 ~~~
 
 ## Deployment

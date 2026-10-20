@@ -1,0 +1,46 @@
+{
+  "label": "baseline-before-portfolio-improvements",
+  "scorecardSha256": "8cda96d0d4667f9681c91d94b22e911df8974765428fea6bccddc4bf790c51f7",
+  "lighthouse": {
+    "performance": 91,
+    "accessibility": 96,
+    "bestPractices": 100,
+    "seo": 100
+  },
+  "visualVerdict": 92,
+  "recruiterScan": {
+    "specialty_clear_in_hero": true,
+    "current_role_visible_within_two_sections": true,
+    "three_or_more_inspectable_case_studies": true,
+    "problem_build_evidence_scope_are_separated": true,
+    "quantified_results_are_attributed": true,
+    "mechanics_electronics_perception_autonomy_control_are_evident": true,
+    "resume_email_github_linkedin_are_direct": true,
+    "claims_are_supported_by_visible_evidence_or_caveat": true,
+    "copy_avoids_generic_ai_portfolio_phrases": false,
+    "section_purpose_is_unique_without_redundant_claims": false
+  },
+  "responsiveInteraction": {
+    "no_horizontal_overflow_at_390_768_1280": true,
+    "mobile_navigation_is_operable": true,
+    "project_and_method_tabs_expose_selected_state": true,
+    "keyboard_focus_is_visible_on_controls": true,
+    "reduced_motion_preserves_content_and_navigation": true
+  },
+  "engineeringReliability": {
+    "tests_pass": true,
+    "lint_passes": true,
+    "production_build_passes": true,
+    "render_has_no_console_or_page_errors": true,
+    "published_site_and_resume_return_http_200": true
+  },
+  "evidence": {
+    "lighthouseRuns": [
+      { "performance": 91, "accessibility": 96, "bestPractices": 100, "seo": 100 },
+      { "performance": 91, "accessibility": 96, "bestPractices": 100, "seo": 100 },
+      { "performance": 92, "accessibility": 96, "bestPractices": 100, "seo": 100 }
+    ],
+    "lighthouseFindings": ["mobile LCP approximately 2.8 seconds", "one color-contrast failure", "CLS approximately 0.04"],
+    "visualFindings": ["mobile utility text is too small", "hero cross-section is visually dense on mobile", "several sections repeat the interface/full-chain message"]
+  }
+}
