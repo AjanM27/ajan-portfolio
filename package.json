@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "test": "vitest run",
+    "score:quality": "node scripts/score-quality.mjs quality/scorecard.json",
     "preview": "vite preview"
   },
   "dependencies": {

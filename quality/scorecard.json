@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "lockedBeforeImprovements": true,
+  "passThreshold": 98.5,
+  "measurementProtocol": {
+    "lighthouse": "Median of three Lighthouse mobile navigation runs against a clean local production preview; category scores are recorded as integers from 0 to 100.",
+    "visualVerdict": "Arithmetic mean of strict 0-100 visual verdicts for 1280x720 desktop and 390x844 mobile screenshots.",
+    "binaryChecks": "A check receives credit only when its full wording is satisfied and evidence is recorded; partial credit is not allowed.",
+    "passingRule": "The unrounded weighted total must be strictly greater than 98.5."
+  },
+  "dimensions": {
+    "lighthouse": {
+      "weight": 50,
+      "metrics": {
+        "performance": 15,
+        "accessibility": 15,
+        "bestPractices": 10,
+        "seo": 10
+      }
+    },
+    "visualVerdict": {
+      "weight": 15,
+      "description": "Rendered desktop and mobile hierarchy, restraint, rhythm, legibility, and category fit, scored from 0 to 100."
+    },
+    "recruiterScan": {
+      "weight": 15,
+      "checks": [
+        "specialty_clear_in_hero",
+        "current_role_visible_within_two_sections",
+        "three_or_more_inspectable_case_studies",
+        "problem_build_evidence_scope_are_separated",
+        "quantified_results_are_attributed",
+        "mechanics_electronics_perception_autonomy_control_are_evident",
+        "resume_email_github_linkedin_are_direct",
+        "claims_are_supported_by_visible_evidence_or_caveat",
+        "copy_avoids_generic_ai_portfolio_phrases",
+        "section_purpose_is_unique_without_redundant_claims"
+      ]
+    },
+    "responsiveInteraction": {
+      "weight": 10,
+      "checks": [
+        "no_horizontal_overflow_at_390_768_1280",
+        "mobile_navigation_is_operable",
+        "project_and_method_tabs_expose_selected_state",
+        "keyboard_focus_is_visible_on_controls",
+        "reduced_motion_preserves_content_and_navigation"
+      ]
+    },
+    "engineeringReliability": {
+      "weight": 10,
+      "checks": [
+        "tests_pass",
+        "lint_passes",
+        "production_build_passes",
+        "render_has_no_console_or_page_errors",
+        "published_site_and_resume_return_http_200"
+      ]
+    }
+  }
+}
