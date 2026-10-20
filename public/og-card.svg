@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#10110f"/>
+  <g opacity=".12" stroke="#fff"><path d="M0 90h1200M0 180h1200M0 270h1200M0 360h1200M0 450h1200M0 540h1200"/><path d="M90 0v630M180 0v630M270 0v630M360 0v630M450 0v630M540 0v630M630 0v630M720 0v630M810 0v630M900 0v630M990 0v630M1080 0v630"/></g>
+  <circle cx="1000" cy="310" r="175" fill="none" stroke="#2459ff" stroke-width="2"/>
+  <circle cx="1000" cy="310" r="112" fill="none" stroke="#c9ff38" stroke-dasharray="8 10"/>
+  <circle cx="1000" cy="310" r="58" fill="#c9ff38"/>
+  <circle cx="1125" cy="187" r="10" fill="#c9ff38"/><circle cx="862" cy="405" r="9" fill="#2459ff"/>
+  <rect x="68" y="65" width="58" height="58" rx="17" fill="#c9ff38"/>
+  <text x="97" y="102" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="18" fill="#10110f">AM</text>
+  <text x="68" y="213" font-family="Arial, sans-serif" font-weight="700" font-size="77" fill="#fff">Robotics that</text>
+  <text x="68" y="294" font-family="Georgia, serif" font-style="italic" font-size="86" fill="#c9ff38">understands, decides</text>
+  <text x="68" y="375" font-family="Arial, sans-serif" font-weight="700" font-size="77" fill="#fff">and moves.</text>
+  <text x="68" y="474" font-family="monospace" font-size="18" letter-spacing="3" fill="#aaa">AJAN MUTHURAJ · ROBOTICS &amp; AUTONOMOUS SYSTEMS</text>
+  <text x="68" y="532" font-family="Arial, sans-serif" font-size="21" fill="#aaa">SLAM · MOTION PLANNING · ROBOT LEARNING · MULTI-ROBOT SYSTEMS</text>
+</svg>
