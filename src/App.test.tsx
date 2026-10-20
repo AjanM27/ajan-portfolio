@@ -28,12 +28,20 @@ describe('portfolio interactions', () => {
     expect(screen.getByText('DDQN')).toBeInTheDocument()
   })
 
-  it('switches the robotics system readout', () => {
+  it('switches the engineering method readout', () => {
     render(<App />)
 
-    fireEvent.click(screen.getByRole('tab', { name: '03Decide' }))
+    fireEvent.click(screen.getByRole('tab', { name: /Stress the interfaces/ }))
 
-    expect(screen.getByRole('heading', { name: 'Decide' })).toBeInTheDocument()
-    expect(screen.getByText('Planning, learning and safety-aware policies')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Most robotics failures live between good subsystems.' })).toBeInTheDocument()
+    expect(screen.getByText(/stale maps, noisy sensing/)).toBeInTheDocument()
+  })
+
+  it('offers the resume from the header and about section', () => {
+    render(<App />)
+
+    const links = screen.getAllByRole('link', { name: /résumé/i })
+    expect(links.length).toBeGreaterThanOrEqual(2)
+    expect(links[0].getAttribute('href')).toMatch(/\/Ajan_Muthuraj_Resume\.pdf$/)
   })
 })
