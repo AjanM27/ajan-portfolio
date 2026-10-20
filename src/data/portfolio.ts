@@ -90,13 +90,13 @@ export const engineeringLoop = [
 ]
 
 export const milestones = [
-  { year: '2026', title: 'B.Tech · IIT Madras', copy: 'Graduated in Mechanical Engineering with a CGPA of 8.52/10; thesis on reach–avoid reinforcement learning in time-varying environments.', tag: 'EDUCATION' },
-  { year: '2026', title: 'ICRA XPLORE Workshop', copy: 'Collaborative work on multi-robot frontier exploration under uncertainty accepted for a poster presentation.', tag: 'RESEARCH' },
-  { year: '2025', title: 'Humanoid robotics research · IIT Roorkee', copy: 'Integrated navigation, perception and collision-aware manipulation in a hospital-like environment.', tag: 'INTERNSHIP' },
-  { year: '2024–25', title: 'Logistics coBot · e-Yantra', copy: 'Built UR5 manipulation and eBot navigation for autonomous package sorting and delivery in simulation and on hardware.', tag: 'COMPETITION' },
-  { year: 'Next', title: 'Systems Engineer · DLTX', copy: 'Upcoming systems-engineering role at Dai-ichi Life Techno Cross in Japan.', tag: 'WORK' },
+  { year: '2026—Now', title: 'Systems Engineer · DLTX', copy: 'Working as a Systems Engineer at Dai-ichi Life Techno Cross in Japan.', tag: 'INDUSTRY', current: true },
+  { year: '2026', title: 'B.Tech · IIT Madras', copy: 'Graduated in Mechanical Engineering with a CGPA of 8.52/10; thesis on reach–avoid reinforcement learning in time-varying environments.', tag: 'EDUCATION', current: false },
+  { year: '2026', title: 'ICRA XPLORE Workshop', copy: 'Collaborative work on multi-robot frontier exploration under uncertainty accepted for a poster presentation.', tag: 'RESEARCH', current: false },
+  { year: '2025', title: 'Humanoid robotics research · IIT Roorkee', copy: 'Integrated navigation, perception and collision-aware manipulation in a hospital-like environment.', tag: 'INTERNSHIP', current: false },
+  { year: '2024–25', title: 'Logistics coBot · e-Yantra', copy: 'Built UR5 manipulation and eBot navigation for autonomous package sorting and delivery in simulation and on hardware.', tag: 'COMPETITION', current: false },
 ]
 
 export const profile = {
-  name: 'Ajan Muthuraj', email: 'ajanm2003@gmail.com', github: 'https://github.com/AjanM27', linkedin: 'https://www.linkedin.com/in/ajanmuthuraj/', location: 'India → Japan', resume: '/Ajan_Muthuraj_Resume.pdf',
+  name: 'Ajan Muthuraj', email: 'ajanm2003@gmail.com', github: 'https://github.com/AjanM27', linkedin: 'https://www.linkedin.com/in/ajanmuthuraj/', location: 'Japan', resume: '/Ajan_Muthuraj_Resume.pdf',
 }

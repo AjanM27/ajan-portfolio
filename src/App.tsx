@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react'
-import { ArrowDown, ArrowUpRight, Award, CircleDot, Code2, Download, GraduationCap, Mail, MapPin, Menu, Radar, UserRound, X } from 'lucide-react'
+import { Activity, ArrowDown, ArrowUpRight, Award, BriefcaseBusiness, CircuitBoard, CircleDot, Code2, Download, Gauge, GraduationCap, Mail, Menu, Route, ScanEye, UserRound, Wrench, X } from 'lucide-react'
 import { engineeringLoop, milestones, profile, projects, type Project } from './data/portfolio'
 import './App.css'
 
@@ -11,6 +11,14 @@ const projectTabs = [
   { id: 'multi', label: 'Multi-robot', projectIds: ['multi-robot-slam', 'swarm-rl', 'isaac-drone'] },
   { id: 'embodied', label: 'Embodied', projectIds: ['humanoid', 'isaac-drone'] },
 ] as const
+
+const systemLayers = [
+  { id: 'mechanism', label: 'Mechanism', detail: 'Geometry · torque · fit', icon: Wrench },
+  { id: 'electronics', label: 'Electronics', detail: 'Power · sensing · I/O', icon: CircuitBoard },
+  { id: 'perception', label: 'Perception', detail: 'Pixels · depth · state', icon: ScanEye },
+  { id: 'autonomy', label: 'Autonomy', detail: 'Policy · plan · safety', icon: Route },
+  { id: 'control', label: 'Control', detail: 'Commands · motion · feedback', icon: Gauge },
+]
 
 const fallbackRepos: GithubRepo[] = [
   { id: 1, name: 'ddqn-reach-avoid-rl', html_url: 'https://github.com/AjanM27/ddqn-reach-avoid-rl', description: 'DDQN for reach–avoid reinforcement learning with time-varying safe and target zones.', language: 'Python', pushed_at: '2026-10-20T11:37:17Z', fork: false },
@@ -107,7 +115,7 @@ function App() {
   return <div className="site-shell">
     <div className="scroll-progress" aria-hidden="true"><span style={{ transform: `scaleX(${scrollProgress})` }} /></div>
     <header className="site-header">
-      <button className="wordmark" onClick={() => navigate('home')} aria-label="Back to top"><span>AM</span><b>Ajan Muthuraj</b></button>
+      <button className="wordmark" onClick={() => navigate('home')} aria-label="Back to top"><b>Ajan Muthuraj</b><small>Robotics systems</small></button>
       <nav className={menuOpen ? 'nav-open' : ''} aria-label="Primary navigation">
         {navItems.map(([id, label]) => <button key={id} className={activeSection === id ? 'active' : ''} onClick={() => navigate(id)}>{label}</button>)}
       </nav>
@@ -119,24 +127,35 @@ function App() {
       <section id="home" className="hero-section" onMouseMove={handleHeroMove}>
         <div className="hero-noise" aria-hidden="true" />
         <div className="hero-copy reveal is-visible">
-          <p className="kicker"><span /> Robotics & autonomous systems engineer</p>
-          <h1>Robots that can<br /><em>perceive uncertainty</em><br />and still act.</h1>
-          <p className="hero-lede">I build end-to-end autonomy across safe reinforcement learning, aerial robotics, multi-robot mapping and humanoid systems.</p>
+          <p className="kicker"><span /> Robotics systems engineer · IIT Madras</p>
+          <h1>I build autonomy<br />for when the world<br /><em>stops cooperating.</em></h1>
+          <p className="hero-lede">From a robot’s physical constraints and sensor signals to the maps, policies and controls that move it, I engineer the full chain.</p>
           <div className="hero-actions">
             <button className="button primary-button" onClick={() => navigate('work')}>See the systems <ArrowDown size={17} /></button>
             <a className="text-link" href={publicUrl(profile.resume)} download>Download résumé <Download size={15} /></a>
           </div>
         </div>
-        <div className="hero-instrument reveal is-visible" aria-label="Interactive autonomy diagram">
-          <div className="instrument-ring ring-a" /><div className="instrument-ring ring-b" /><div className="instrument-sweep" />
-          <div className="instrument-core"><Radar size={37} /><b>AUTONOMY</b><small>closed-loop systems</small></div>
-          <span className="instrument-label label-a">01 / SENSE</span><span className="instrument-label label-b">02 / ESTIMATE</span><span className="instrument-label label-c">03 / PLAN</span><span className="instrument-label label-d">04 / ACT</span>
-          <p className="instrument-note">SAFETY · LIVENESS · ROBUSTNESS</p>
+        <div className="hero-system-map reveal is-visible" aria-label="Five-layer robotics system cross-section">
+          <div className="map-topline"><span>SYSTEM CROSS-SECTION</span><b>05 LAYERS · 01 LOOP</b></div>
+          <div className="map-axis"><span>PHYSICAL</span><i /><span>COMPUTATIONAL</span></div>
+          <div className="system-stack">
+            {systemLayers.map((layer, index) => {
+              const Icon = layer.icon
+              return <div className="system-layer" key={layer.id} style={{ '--layer': index } as CSSProperties}>
+                <span>{String(index + 1).padStart(2, '0')}</span><div className="layer-icon"><Icon size={19} /></div><div><b>{layer.label}</b><small>{layer.detail}</small></div><i aria-hidden="true" />
+              </div>
+            })}
+          </div>
+          <div className="map-footer"><span><Activity size={15} /> INTERFACES / ACTIVE</span><p>I work across the interfaces where failures hide.</p></div>
         </div>
         <button className="scroll-cue" onClick={() => navigate('about')}><span>Scroll to inspect</span><ArrowDown size={16} /></button>
       </section>
 
-      <div className="signal-marquee" aria-hidden="true"><div>SAFE RL <i /> MULTI-ROBOT SYSTEMS <i /> AERIAL AUTONOMY <i /> HUMANOID ROBOTICS <i /> MOTION PLANNING <i /> SAFE RL <i /> MULTI-ROBOT SYSTEMS</div></div>
+      <div className="scope-band" aria-label="Engineering scope">
+        <div><span>01 / BUILD</span><strong>Physical constraints become mechanisms.</strong></div>
+        <div><span>02 / CONNECT</span><strong>Sensors and electronics become state.</strong></div>
+        <div><span>03 / CLOSE THE LOOP</span><strong>Software becomes controlled motion.</strong></div>
+      </div>
 
       <section id="about" className="about-section section-pad">
         <div className="about-photo reveal">
@@ -145,15 +164,15 @@ function App() {
         </div>
         <div className="about-copy reveal">
           <p className="section-index">01 / ABOUT</p>
-          <h2>I’m Ajan—an engineer who likes the space <em>between an algorithm and a robot that works.</em></h2>
+          <h2>Mechanical by training.<br /><em>Systems-minded by practice.</em></h2>
           <div className="about-body">
-            <p>I graduated from IIT Madras with a B.Tech in Mechanical Engineering and a CGPA of 8.52/10. My work sits at the intersection of robotics software, learning, planning and system integration.</p>
-            <p>I’m most energized by problems where uncertainty is unavoidable: moving obstacles, imperfect maps, delayed communication and perception that must become safe motion. I care about the complete loop—and about making it inspectable.</p>
+            <p>I graduated from IIT Madras with a B.Tech in Mechanical Engineering and a CGPA of 8.52/10. I now work as a Systems Engineer at Dai-ichi Life Techno Cross in Japan.</p>
+            <p>I’m most energized by problems where uncertainty is unavoidable: imperfect maps, delayed communication, noisy sensing and mechanisms that still have to move safely. I care about the complete loop—and about making every handoff inspectable.</p>
           </div>
           <div className="about-facts">
             <div><GraduationCap /><span>Education</span><strong>IIT Madras · B.Tech Mechanical Engineering</strong></div>
             <div><Award /><span>Research</span><strong>ICRA 2026 XPLORE Workshop poster</strong></div>
-            <div><MapPin /><span>Trajectory</span><strong>{profile.location} · DLTX next</strong></div>
+            <div><BriefcaseBusiness /><span>Current role</span><strong>Systems Engineer · DLTX, Japan</strong></div>
           </div>
           <div className="about-actions"><a className="button dark-button" href={publicUrl(profile.resume)} download>Download résumé <Download size={16} /></a><a className="inline-link" href={profile.linkedin} target="_blank" rel="noreferrer">Full profile <ArrowUpRight size={15} /></a></div>
         </div>
@@ -198,20 +217,28 @@ function App() {
         </div>
       </section>
 
+      <section className="principle-section section-pad reveal" aria-label="Engineering principle">
+        <p className="section-index">04 / A PRINCIPLE I BUILD BY</p>
+        <blockquote>A robot becomes real where the diagram stops—at the first <em>noisy pixel, loose fastener, drifting voltage</em> and <em>late packet.</em></blockquote>
+        <div><span>WHY IT MATTERS</span><p>Reliability is not owned by one discipline. It emerges from the agreements between them.</p></div>
+      </section>
+
       <section id="now" className="now-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">04 / LIVE FROM GITHUB</p><h2>Current work,<br /><em>without curation lag.</em></h2><p>This feed reads my latest described public repositories. New public work appears automatically; private work remains private.</p></div>
+        <div className="section-heading reveal"><p className="section-index">05 / LIVE FROM GITHUB</p><h2>Current work,<br /><em>without curation lag.</em></h2><p>This feed reads my latest described public repositories. New public work appears automatically; private work remains private.</p></div>
         <div className="live-status reveal"><span className={live ? 'pulse live' : 'pulse'} />{live ? 'GitHub API connected' : 'Curated fallback · GitHub API unavailable'}<small>public activity only</small></div>
         <div className="repo-grid">{repos.map((repo, index) => <a className="repo-card reveal" href={repo.html_url} target="_blank" rel="noreferrer" key={repo.id} style={{ '--delay': `${index * 80}ms` } as CSSProperties}><div><Code2 size={20} /><span>{repo.fork ? 'COLLABORATIVE / FORK' : 'PUBLIC REPOSITORY'}</span><ArrowUpRight size={17} /></div><h3>{repo.name.replaceAll('-', ' ')}</h3><p>{repo.description || 'Public robotics and engineering work on GitHub.'}</p><footer><span>{repo.language || 'Mixed'}</span><time dateTime={repo.pushed_at}>Pushed {timeAgo(repo.pushed_at)}</time></footer></a>)}</div>
         <a className="all-work-link reveal" href={`${profile.github}?tab=repositories`} target="_blank" rel="noreferrer">Browse all repositories <ArrowUpRight /></a>
       </section>
 
       <section id="story" className="story-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">05 / TRAJECTORY</p><h2>Research depth.<br /><em>System breadth.</em></h2><p>A concise path through education, research, team engineering and what comes next.</p></div>
-        <div className="timeline">{milestones.map((item, index) => <article className="timeline-item reveal" key={`${item.year}-${item.title}`}><div className="timeline-marker"><span>{String(index + 1).padStart(2, '0')}</span><i /></div><time>{item.year}</time><div><p>{item.tag}</p><h3>{item.title}</h3><span>{item.copy}</span></div></article>)}</div>
+        <div className="journey-layout">
+          <div className="journey-intro reveal"><p className="section-index">06 / TRAJECTORY</p><h2>Built by moving<br /><em>between disciplines.</em></h2><p>Research gave me depth. Team projects taught me interfaces. Industry is sharpening how I think about systems at scale.</p></div>
+          <div className="journey-list">{milestones.map((item, index) => <article className={`journey-item reveal${item.current ? ' current' : ''}`} key={`${item.year}-${item.title}`}><div className="journey-track"><span>{String(index + 1).padStart(2, '0')}</span><i /></div><div className="journey-card"><header><time>{item.year}</time><span>{item.tag}</span>{item.current && <b>NOW</b>}</header><h3>{item.title}</h3><p>{item.copy}</p></div></article>)}</div>
+        </div>
       </section>
 
       <section id="contact" className="contact-section section-pad reveal">
-        <p className="section-index">06 / CONTACT</p><div><h2>Building a system<br />that has to <em>move?</em></h2><p>I’m interested in robotics software, autonomy, multi-robot systems, motion planning and research-engineering work.</p></div>
+        <p className="section-index">07 / CONTACT</p><div><h2>Building a system<br />that has to <em>move?</em></h2><p>I’m interested in robotics software, autonomy, multi-robot systems, motion planning and research-engineering work.</p></div>
         <a className="contact-orb" href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}><Mail size={28} /><span>Start a conversation</span><ArrowUpRight /></a>
         <div className="contact-links"><a href={profile.github} target="_blank" rel="noreferrer"><Code2 /> GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><UserRound /> LinkedIn</a><a href={publicUrl(profile.resume)} download><Download /> Résumé</a><a href={`mailto:${profile.email}`}><Mail /> {profile.email}</a></div>
       </section>

@@ -44,4 +44,15 @@ describe('portfolio interactions', () => {
     expect(links.length).toBeGreaterThanOrEqual(2)
     expect(links[0].getAttribute('href')).toMatch(/\/Ajan_Muthuraj_Resume\.pdf$/)
   })
+
+  it('presents the full robotics system and current DLTX role', () => {
+    render(<App />)
+
+    expect(screen.getByLabelText('Five-layer robotics system cross-section')).toBeInTheDocument()
+    expect(screen.getByText('Mechanism')).toBeInTheDocument()
+    expect(screen.getByText('Perception')).toBeInTheDocument()
+    expect(screen.getAllByText(/Systems Engineer/).length).toBeGreaterThanOrEqual(2)
+    expect(screen.getByText(/A robot becomes real where the diagram stops/)).toBeInTheDocument()
+    expect(screen.queryByText(/Upcoming systems-engineering role/)).not.toBeInTheDocument()
+  })
 })
