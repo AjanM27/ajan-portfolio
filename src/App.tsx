@@ -5,7 +5,7 @@ import './App.css'
 
 const publicUrl = (path: string) => path.startsWith('/') ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path
 const projectHash = (id: string) => `#project=${id}`
-const navigation = [['work', 'Projects'], ['about', 'About'], ['interests', 'Interests'], ['contact', 'Contact']] as const
+const navigation = [['work', 'Projects'], ['experience', 'Experience'], ['about', 'About'], ['interests', 'Interests'], ['contact', 'Contact']] as const
 
 function focusWork() {
   document.getElementById('work')?.scrollIntoView()
@@ -136,7 +136,7 @@ function App() {
     const nextGroup = projectGroups.find((item) => item.id === id)
     if (!nextGroup || id === groupId) return
     setGroupId(id)
-    selectProject(nextGroup.projectIds[0])
+    selectProject(nextGroup.projectIds.includes(activeProject.id) ? activeProject.id : nextGroup.projectIds[0])
   }
 
   const handleTabKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -144,6 +144,8 @@ function App() {
     const keyTargets: Record<string, number> = {
       ArrowRight: (index + 1) % visibleProjects.length,
       ArrowLeft: (index + last) % visibleProjects.length,
+      ArrowDown: (index + 1) % visibleProjects.length,
+      ArrowUp: (index + last) % visibleProjects.length,
       Home: 0,
       End: last,
     }
@@ -160,7 +162,7 @@ function App() {
       <a className="skip-link" href="#main">Skip to content</a>
       <header className="site-header">
         <div className="nav-inner">
-          <a className="wordmark" href="#home" onClick={() => setMenuOpen(false)}><span aria-hidden="true">AM</span> Ajan Muthuraj</a>
+          <a className="wordmark" href="#home" onClick={() => setMenuOpen(false)}>Ajan Muthuraj</a>
           <button className="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} aria-controls="site-nav" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
           <nav id="site-nav" className={menuOpen ? 'is-open' : ''} aria-label="Primary navigation">
             {navigation.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
@@ -199,32 +201,67 @@ function App() {
           <div className="wrap">
             <div className="section-heading">
               <div><p className="eyebrow">01 / Portfolio</p><h2 id="work-title" tabIndex={-1}>Selected projects</h2></div>
-              <p>Explore the implementation, my contribution and the results. Each project links to the evidence available for it.</p>
+              <p>{projects.length} projects across autonomy, manipulation, swarms, embedded systems and software. Filter by area to see what I built and how I tested it.</p>
             </div>
             <div className="project-filters" role="group" aria-label="Filter projects">
               {projectGroups.map((item) => <button type="button" key={item.id} aria-pressed={groupId === item.id} onClick={() => selectGroup(item.id)}>{item.label}</button>)}
             </div>
-            <div className="project-selector" role="tablist" aria-label={`${group.label} projects`}>
-              {visibleProjects.map((project, index) => (
-                <button key={project.id} type="button" role="tab" id={`tab-${project.id}`} aria-selected={project.id === activeProject.id} aria-controls="project-case" tabIndex={project.id === activeProject.id ? 0 : -1} onClick={() => selectProject(project.id)} onKeyDown={(event) => handleTabKey(event, index)}>
-                  {project.shortTitle}<ArrowRight size={15} aria-hidden="true" />
-                </button>
-              ))}
+            <div className="work-browser">
+              <div className="project-index">
+                <p className="index-label"><span>{group.label}</span><span>{visibleProjects.length} of {projects.length}</span></p>
+                <div className="project-selector" role="tablist" aria-label={`Project list · ${group.label}`} data-group={groupId}>
+                  {visibleProjects.map((project, index) => (
+                    <button key={project.id} type="button" role="tab" id={`tab-${project.id}`} aria-selected={project.id === activeProject.id} aria-controls="project-case" tabIndex={project.id === activeProject.id ? 0 : -1} onClick={() => selectProject(project.id)} onKeyDown={(event) => handleTabKey(event, index)}>
+                      {project.shortTitle}<ArrowRight size={15} aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <ProjectCase key={activeProject.id} project={activeProject} />
             </div>
-            <ProjectCase key={activeProject.id} project={activeProject} />
+          </div>
+        </section>
+
+        <section id="experience" className="experience-section section-pad">
+          <div className="wrap">
+            <div className="section-heading">
+              <div><p className="eyebrow">02 / Experience</p><h2>Work and leadership</h2></div>
+              <a className="evidence-link" href={publicUrl(profile.resume)}>Read my résumé <ArrowUpRight size={15} aria-hidden="true" /></a>
+            </div>
+            <div className="experience-grid">
+              <article className="experience-card">
+                <p className="eyebrow">Oct 2026 to present · Japan</p>
+                <h3>Systems Engineer, DLTX</h3>
+                <p>At Dai-ichi Life Techno Cross, I’ve practised reverse and forward engineering of Lotus Notes applications and built a React interface from supplied XML exports.</p>
+                <p><strong>Full-stack learning:</strong> Java and Spring Boot, data persistence, Docker containers and Kubernetes fundamentals.</p>
+              </article>
+              <article className="experience-card">
+                <p className="eyebrow">Jun to Jul 2025 · IIT Roorkee</p>
+                <h3>Robotics Research Intern</h3>
+                <p>I worked on a simulated hospital humanoid, connecting RGB-D perception and Nav2 navigation with MoveIt 2 manipulation.</p>
+                <a className="evidence-link" href={projectHash('humanoid')} onClick={reopenProject}>Open the humanoid project <ArrowRight size={15} aria-hidden="true" /></a>
+              </article>
+              <article className="experience-card">
+                <p className="eyebrow">Student leadership · IIT Madras</p>
+                <h3>Electronics &amp; Robotics Guild</h3>
+                <p>I led robotics training and helped assemble teams for Inter-IIT competitions. In the Electronics Club, I led Cubitect and taught hands-on sessions, including a Shaastra workshop on parallel processing.</p>
+                <a className="evidence-link" href={projectHash('cubitect')} onClick={reopenProject}>Open Cubitect <ArrowRight size={15} aria-hidden="true" /></a>
+              </article>
+            </div>
           </div>
         </section>
 
         <section id="about" className="about-section section-pad">
           <div className="wrap about-layout">
             <div className="about-copy">
-              <p className="eyebrow">02 / About me</p>
+              <p className="eyebrow">03 / About me</p>
               <h2>Why I like robotics</h2>
-              <p>I studied mechanical engineering at IIT Madras. As a Systems Engineer at Dai-ichi Life Techno Cross in Japan, I’m building experience in enterprise software architecture and backend development. Robotics is where I get to follow a problem all the way from a noisy sensor reading to what a mechanism actually does.</p>
+              <p>I studied mechanical engineering at IIT Madras. What drew me to robotics was being able to follow a problem all the way from a noisy sensor reading to what a mechanism actually does.</p>
               <p>In an early rover project, that meant turning IMU and flex-sensor readings into motor and servo commands. At e-Yantra, it meant getting an eBot to dock and a UR5 to pick up a package. I like learning unfamiliar tools quickly, and building something with them is how I find out what I’ve understood.</p>
               <blockquote>“Anything can be learnt.”</blockquote>
+              <p><strong>Languages:</strong> English, Hindi, Tamil and basic Japanese.</p>
               <div className="inline-links">
-                <a href="https://github.com/AjanM27/Gesture-Controlled-Defence-Rover">Rover architecture and Arduino sketches <ArrowUpRight size={15} aria-hidden="true" /></a>
+                <a href={projectHash('gesture-rover')} onClick={reopenProject}>Rover architecture and Arduino sketches <ArrowRight size={15} aria-hidden="true" /></a>
                 <a href={projectHash('swarm-rescue')} onClick={reopenProject}>Swarm Rescue competition and ICRA poster <ArrowRight size={15} aria-hidden="true" /></a>
               </div>
             </div>
@@ -238,7 +275,7 @@ function App() {
         <section id="interests" className="interests-section section-pad">
           <div className="wrap">
             <div className="section-heading">
-              <div><p className="eyebrow">03 / What I want to explore</p><h2>Questions I keep coming back to</h2></div>
+              <div><p className="eyebrow">04 / What I want to explore</p><h2>Questions I keep coming back to</h2></div>
               <p>These are the problems I’d like to spend more time on. Each starts from something I’ve built or studied.</p>
             </div>
             <div className="interest-grid">
@@ -255,7 +292,7 @@ function App() {
 
         <section id="contact" className="contact-section section-pad">
           <div className="wrap contact-layout">
-            <div><p className="eyebrow">04 / Contact</p><h2>Get in touch</h2><p>I’m interested in robotics software, autonomy and integration roles, especially where I can work across perception, planning and control.</p></div>
+            <div><p className="eyebrow">05 / Contact</p><h2>Get in touch</h2><p>I’m interested in robotics software, autonomy and integration roles, especially where I can work across perception, planning and control.</p></div>
             <div className="contact-links">
               <a className="button button-accent" href={`mailto:${profile.email}`}>Email me <ArrowUpRight size={16} aria-hidden="true" /></a>
               <a href={profile.github}>GitHub <ArrowUpRight size={15} aria-hidden="true" /></a>

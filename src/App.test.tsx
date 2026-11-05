@@ -50,12 +50,25 @@ describe('portfolio interactions', () => {
     expect(screen.getByRole('link', { name: 'Watch the full humanoid simulation demo' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mj8LEdT97FQ')
   })
 
+  it('lists all projects and shows a still illustration for Adaptive RRT*', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'All projects' }))
+    expect(screen.getAllByRole('tab')).toHaveLength(14)
+    fireEvent.click(screen.getByRole('tab', { name: 'Adaptive RRT*' }))
+    expect(screen.getByRole('img', { name: /Illustration of the replanning strategy/ })).toHaveAttribute('src', expect.stringMatching(/adaptive-rrt-replanning\.svg$/))
+    fireEvent.click(screen.getByRole('button', { name: 'Embedded & controls' }))
+    fireEvent.click(screen.getByRole('tab', { name: 'GeoGuide rover' }))
+    expect(screen.getByRole('heading', { name: 'GeoGuide overhead-vision rover' })).toBeInTheDocument()
+  })
+
   it('makes the résumé and learning interests easy to find', () => {
     render(<App />)
     expect(screen.getByRole('link', { name: 'View résumé' })).toHaveAttribute('href', expect.stringMatching(/\/Ajan_Muthuraj_Resume\.pdf$/))
     expect(screen.getByText('Vision-language-action models and RL')).toBeInTheDocument()
     expect(screen.getByText('“Anything can be learnt.”')).toBeInTheDocument()
-    expect(screen.getAllByText(/Systems Engineer at Dai-ichi Life Techno Cross/)).toHaveLength(2)
+    expect(screen.getByText(/Systems Engineer at Dai-ichi Life Techno Cross/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Systems Engineer, DLTX' })).toBeInTheDocument()
+    expect(screen.getByText(/English, Hindi, Tamil and basic Japanese/)).toBeInTheDocument()
   })
 
   it('exposes mobile navigation state and closes it after navigation', () => {
