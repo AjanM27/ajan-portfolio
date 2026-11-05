@@ -14,6 +14,8 @@ export type Project = {
   image: string
   mediaLabel: string
   mediaSource?: string
+  evidenceLinks?: { label: string; url: string }[]
+  gallery?: { src: string; label: string }[]
   imageFit?: 'cover' | 'contain'
   featured?: boolean
   collaborative?: boolean
@@ -35,33 +37,56 @@ export const projects: Project[] = [
     summary: 'A DDQN framework for safety-critical navigation when obstacles and targets move over time.',
     challenge: 'A policy that only sees position cannot distinguish identical locations at different times when the safe and target sets are moving.',
     build: 'Augmented the state with time, corrected baseline implementation issues, and trained a DDQN against a discounted reach–avoid Bellman objective.',
-    outcome: 'Reported up to 94.4% safe-state prediction precision in large-scale evaluation while preserving the reach–avoid formulation.',
+    outcome: '79.5% and 76.0% grid rollout success in two time-varying environments; 94.4% predicted-safe precision on the dual-obstacle map. These are simulation results, not a formal guarantee for the learned DDQN.',
     role: 'Problem formulation, environment design, implementation, training, evaluation and thesis research.',
     tags: ['DDQN', 'PyTorch', 'Safe RL', 'Gym', 'Dynamic systems'], href: 'https://github.com/AjanM27/ddqn-reach-avoid-rl',
-    image: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-rollout-action.png', mediaLabel: 'Learned value, rollout and action after training', imageFit: 'contain', featured: true,
+    image: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-rollout-action.png', mediaLabel: 'Actual project evaluation figure · value, rollout and action', imageFit: 'contain', featured: true,
+    gallery: [
+      { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-time-slices.png', label: 'Time-conditioned value-function slices from the research implementation' },
+      { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/metrics-summary.png', label: 'Experimental metrics and rollout evaluation' },
+    ],
+    evidenceLinks: [{ label: 'Research implementation and methodology', url: 'https://github.com/AjanM27/ddqn-reach-avoid-rl/blob/main/docs/PROJECT_OVERVIEW.md' }],
   },
   {
-    id: 'multi-robot-slam', index: '03', title: 'Multi-robot SLAM and temporal map fusion', shortTitle: 'Multi-robot SLAM', domain: 'Research · collaboration',
+    id: 'swarm-rescue', index: '03', title: 'Swarm Rescue Challenge · ten-drone autonomous exploration', shortTitle: 'Swarm Rescue', domain: 'Research · competition',
+    summary: 'An autonomous ten-UAV search-and-rescue system for GPS-denied, obstacle-rich environments, developed collaboratively at IIT Madras.',
+    challenge: 'Coordinate exploration, localization and shared maps despite moving hazards and imperfect information.',
+    build: 'The team integrated FastSLAM with ICP scan matching, adaptive frontier exploration, temporal occupancy-grid fusion and hazard avoidance.',
+    outcome: 'Second among Indian teams at the 2025–26 Swarm Rescue Challenge. Related research appeared as a poster at the ICRA 2026 XPLORE Workshop.',
+    role: 'Collaborative multi-drone autonomy research and integration; see the official results and co-authored poster for team attribution.',
+    tags: ['Swarm robotics', 'FastSLAM', 'ICP', 'Frontier exploration', 'Map fusion'],
+    href: 'https://openreview.net/forum?id=tbvhPL9Ftk',
+    image: '/media/drone-reference.jpg', mediaLabel: 'Representative drone photo, not a competition screenshot · Project Kei · CC BY-SA 4.0',
+    mediaSource: 'https://commons.wikimedia.org/wiki/File:Quadcopter_Drone_in_flight.jpg', imageFit: 'cover', featured: true, collaborative: true,
+    evidenceLinks: [
+      { label: 'Official challenge results', url: 'https://www.ip-paris.fr/en/news/swarm-rescue-challenge-final-2025-2026-save-lives-controlling-swarm-drones' },
+      { label: 'ICRA 2026 XPLORE workshop poster', url: 'https://openreview.net/forum?id=tbvhPL9Ftk' },
+    ],
+  },
+  {
+    id: 'multi-robot-slam', index: '04', title: 'Multi-robot SLAM and temporal map fusion', shortTitle: 'Multi-robot SLAM', domain: 'Research · collaboration',
     summary: 'Collective exploration under noisy sensing with shared occupancy-grid memory and recovery from navigation deadlocks.',
     challenge: 'Keep several robots productive when their local maps, communication and frontier choices are all uncertain.',
     build: 'Combined temporal map fusion, deadlock detection and delayed self-reinforcement with coordinated frontier-based exploration.',
-    outcome: 'The wider research was accepted for a poster at the ICRA 2026 XPLORE Workshop.',
+    outcome: 'Documented collaborative multi-robot navigation and map-fusion experiments. The separate ten-UAV Swarm Rescue research is listed as its own project.',
     role: 'Collaborative research and engineering across navigation, mapping and evaluation.',
     tags: ['Multi-robot', 'SLAM', 'Map fusion', 'MATLAB', 'Control'], href: 'https://github.com/AjanM27/Multi-Robot-SLAM-Navigation',
-    image: 'https://raw.githubusercontent.com/AjanM27/Multi-Robot-SLAM-Navigation/main/Demonstrations/DSR_Maze.gif', mediaLabel: 'Project simulation capture', imageFit: 'contain', featured: true, collaborative: true,
+    image: 'https://raw.githubusercontent.com/AjanM27/Multi-Robot-SLAM-Navigation/main/Demonstrations/DSR_Maze.gif', mediaLabel: 'Actual collaborative project simulation capture', imageFit: 'contain', featured: true, collaborative: true,
+    evidenceLinks: [{ label: 'Simulation source and collaborator attribution', url: 'https://github.com/AjanM27/Multi-Robot-SLAM-Navigation' }],
   },
   {
-    id: 'humanoid', index: '04', title: 'Hospital humanoid navigation and manipulation', shortTitle: 'Humanoid system', domain: 'Research internship',
+    id: 'humanoid', index: '05', title: 'Hospital humanoid navigation and manipulation', shortTitle: 'Humanoid system', domain: 'Research internship',
     summary: 'An integrated ROS 2 workflow for a humanoid operating in a hospital-like environment.',
     challenge: 'Move from detecting an object to navigating, localizing it in 3D and executing a collision-aware grasp as one system.',
-    build: 'Created the Gazebo/URDF simulation and integrated Nav2, SLAM, YOLOv8, depth localization, MoveIt 2 and OctoMap.',
+    build: 'Created the Gazebo/URDF simulation and integrated Nav2, SLAM, YOLOv9, depth localization, MoveIt 2, TRAC-IK and OctoMap.',
     outcome: 'Approximately 96.6% grasp success across 30 reported experimental trials.',
     role: 'Robot simulation, navigation, perception, 3D localization and manipulation integration.',
-    tags: ['ROS 2', 'Nav2', 'MoveIt 2', 'YOLOv8', 'Gazebo'], href: 'https://www.linkedin.com/in/ajanmuthuraj/',
-    image: '/media/humanoid-reference.webp', mediaLabel: 'Representative visual · Wikideas1 · CC0', mediaSource: 'https://commons.wikimedia.org/wiki/File:Humanoid_Robot.webp', imageFit: 'cover', featured: true,
+    tags: ['ROS 2', 'Nav2', 'MoveIt 2', 'YOLOv9', 'Gazebo'], href: 'https://www.linkedin.com/in/ajanmuthuraj/',
+    image: '/media/humanoid-reference.webp', mediaLabel: 'Representative visual only · actual simulation documented in IIT Roorkee poster', mediaSource: 'https://commons.wikimedia.org/wiki/File:Humanoid_Robot.webp', imageFit: 'cover', featured: true,
+    evidenceLinks: [{ label: 'IIT Roorkee research context', url: 'https://www.iitr.ac.in/' }],
   },
   {
-    id: 'swarm-rl', index: '05', title: 'RL-based swarm navigation', shortTitle: 'Swarm RL', domain: 'Inter-IIT · collaboration',
+    id: 'swarm-rl', index: '06', title: 'RL-based swarm navigation', shortTitle: 'Swarm RL', domain: 'Inter-IIT · collaboration',
     summary: 'A ROS 2 and Gazebo swarm workflow for navigation in dynamic warehouse environments.',
     challenge: 'Coordinate many robots without turning perception, mapping and policy execution into independent demos.',
     build: 'Worked across LiDAR clustering, map merging, TD3-oriented training assets, simulation and operator visualization.',
@@ -71,11 +96,11 @@ export const projects: Project[] = [
     image: 'https://raw.githubusercontent.com/AjanM27/Swarm_RL_InterIIT/main/Videos/Large%20Swarm.gif', mediaLabel: 'Project simulation capture', imageFit: 'contain', collaborative: true,
   },
   {
-    id: 'adaptive-rrt', index: '06', title: 'Adaptive planning around moving obstacles', shortTitle: 'Adaptive RRT*', domain: 'Motion planning · collaboration',
+    id: 'adaptive-rrt', index: '07', title: 'Adaptive planning around moving obstacles', shortTitle: 'Adaptive RRT*', domain: 'Motion planning · collaboration',
     summary: 'A visual planning environment for routes that must be repaired as obstacles invalidate them.',
     challenge: 'Replan quickly enough for a changing scene without throwing away every useful part of the previous search.',
     build: 'Implemented and compared Adaptive RRT*, RRT*, A*, Adaptive A* and LPA* across dynamic scenarios.',
-    outcome: 'Reported paths were approximately 12% shorter on average in the evaluated scenarios.',
+    outcome: 'Benchmarked path length and replanning behavior across dynamic simulation scenarios; see the linked repository for comparisons and baseline definitions.',
     role: 'Collaborative algorithm implementation, simulation design and planner evaluation.',
     tags: ['RRT*', 'LPA*', 'Python', 'Pygame', 'Planning'], href: 'https://github.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-',
     image: 'https://raw.githubusercontent.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-/main/trimmed.gif', mediaLabel: 'Project planning demonstration', imageFit: 'contain', collaborative: true,
