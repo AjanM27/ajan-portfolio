@@ -58,13 +58,13 @@ describe('portfolio interactions', () => {
     expect(window.location.hash).toBe('#project=collective-navigation')
   })
 
-  it('lists all projects and shows the Adaptive RRT* capture, schematic, and simulation', () => {
+  it('lists all projects and shows the Adaptive RRT* capture and simulation', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: 'All projects' }))
     expect(screen.getAllByRole('tab')).toHaveLength(14)
     fireEvent.click(screen.getByRole('tab', { name: 'Adaptive RRT*' }))
     expect(screen.getByRole('img', { name: /Original planner capture/ })).toHaveAttribute('src', expect.stringMatching(/adaptive-rrt-simulation\.webp$/))
-    expect(screen.getByRole('link', { name: /Replanning schematic/ })).toHaveAttribute('href', `${import.meta.env.BASE_URL}media/adaptive-rrt-replanning.svg`)
+    expect(screen.queryByRole('heading', { name: 'Supporting visuals' })).not.toBeInTheDocument()
     const simulation = screen.getByLabelText(/Adaptive RRT\* simulation/)
     expect(simulation).toHaveAttribute('src', `${import.meta.env.BASE_URL}media/adaptive-rrt-demo.mp4`)
     expect(simulation).toHaveAttribute('poster', `${import.meta.env.BASE_URL}media/adaptive-rrt-demo-poster.webp`)
