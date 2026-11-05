@@ -45,9 +45,17 @@ describe('portfolio interactions', () => {
     render(<App />)
     expect(screen.queryByRole('heading', { name: 'Robotics simulations' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Watch the nine-drone Isaac Sim demo' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=07T3-0PnAlo')
-    fireEvent.click(screen.getByRole('tab', { name: 'Hospital humanoid' }))
+    fireEvent.click(screen.getByRole('tab', { name: 'Humanoid navigation' }))
     expect(screen.getByLabelText('Navigation in Gazebo')).toHaveAttribute('src', expect.stringMatching(/\/media\/humanoid-navigation\.mp4$/))
     expect(screen.getByRole('link', { name: 'Watch the full humanoid simulation demo' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mj8LEdT97FQ')
+  })
+
+  it('opens the renamed collective navigation case from its old link', () => {
+    window.history.replaceState(null, '', '#project=multi-robot-slam')
+    render(<App />)
+    expect(screen.getByRole('heading', { name: 'Collective Navigation for Multi-Robot Swarms' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Baseline paper by Olcay et al.' })).toHaveAttribute('href', 'https://doi.org/10.1016/j.robot.2020.103604')
+    expect(window.location.hash).toBe('#project=collective-navigation')
   })
 
   it('lists all projects and shows a still illustration for Adaptive RRT*', () => {
