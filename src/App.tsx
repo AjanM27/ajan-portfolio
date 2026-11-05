@@ -6,9 +6,9 @@ import './App.css'
 type GithubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; pushed_at: string; fork: boolean }
 
 const projectTabs = [
-  { id: 'featured', label: 'Flagship', projectIds: ['isaac-drone', 'reach-avoid', 'multi-robot-slam', 'humanoid'] },
+  { id: 'featured', label: 'Flagship', projectIds: ['isaac-drone', 'reach-avoid', 'swarm-rescue', 'humanoid'] },
   { id: 'autonomy', label: 'Autonomy', projectIds: ['isaac-drone', 'reach-avoid', 'adaptive-rrt'] },
-  { id: 'multi', label: 'Multi-robot', projectIds: ['multi-robot-slam', 'swarm-rl', 'isaac-drone'] },
+  { id: 'multi', label: 'Multi-robot', projectIds: ['swarm-rescue', 'multi-robot-slam', 'swarm-rl', 'isaac-drone'] },
   { id: 'embodied', label: 'Embodied', projectIds: ['humanoid', 'isaac-drone'] },
 ] as const
 
@@ -183,7 +183,7 @@ function App() {
         <article id="project-case" className="project-case" key={activeProject.id} role="tabpanel">
           <ProjectMedia project={activeProject} />
           <div className="case-content">
-            <div className="case-heading"><p>{activeProject.domain}{activeProject.collaborative ? ' · team work' : ''}</p><span>{activeProject.index} / 06</span></div>
+            <div className="case-heading"><p>{activeProject.domain}{activeProject.collaborative ? ' · team work' : ''}</p><span>{activeProject.index} / {String(projects.length).padStart(2, '0')}</span></div>
             <h3>{activeProject.title}</h3>
             <p className="case-summary">{activeProject.summary}</p>
             <div className="case-decisions">
@@ -192,9 +192,23 @@ function App() {
               <div><span>EVIDENCE</span><p>{activeProject.outcome}</p></div>
               <div><span>MY SCOPE</span><p>{activeProject.role}</p></div>
             </div>
+            {activeProject.gallery && <div className="project-figures"><h4>Actual project figures</h4><div className="project-figure-grid">{activeProject.gallery.map((figure) => <a key={figure.src} href={figure.src} target="_blank" rel="noreferrer"><img src={figure.src} alt={figure.label} loading="lazy" /><span>{figure.label} <ArrowUpRight size={13} /></span></a>)}</div></div>}
+            {activeProject.evidenceLinks && <div className="project-sources"><h4>Supporting evidence</h4>{activeProject.evidenceLinks.map((link) => <a key={link.url} href={link.url} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}</div>}
             <div className="case-footer"><div className="tag-list">{activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="button dark-button" href={activeProject.href} target="_blank" rel="noreferrer">Inspect evidence <ArrowUpRight size={16} /></a></div>
           </div>
         </article>
+      </section>
+
+      <section id="demos" className="demo-section section-pad">
+        <div className="section-heading reveal"><p className="section-index">03 / VIDEO ARCHIVE</p><h2>Watch the work,<br /><em>not just the screenshots.</em></h2><p>Two demonstration links supplied with this portfolio. Videos open on YouTube; the recordings are not presented as evidence for a specific project until their individual titles and ownership are confirmed.</p></div>
+        <div className="demo-grid">
+          {[{id:'07T3-0PnAlo', label:'Project demo · 01'}, {id:'mj8LEdT97FQ', label:'Project demo · 02'}].map((video) =>
+            <a className="demo-card" href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noreferrer" key={video.id}>
+              <img src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} loading="lazy" alt={`${video.label} — original YouTube thumbnail`} />
+              <div><b>{video.label}</b><span>Watch original recording <ArrowUpRight size={15} /></span></div>
+            </a>
+          )}
+        </div>
       </section>
 
       <section id="method" className="method-section section-pad">
