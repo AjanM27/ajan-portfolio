@@ -10,15 +10,13 @@ humanoid navigation, perception, and manipulation.
 
 ## Highlights
 
-- Evidence-first one-page narrative with motion-aware reveals.
-- Keyboard-accessible tabs for flagship work, autonomy, multi-robot systems,
-  embodied robotics, and the four-step engineering method.
-- Evidence-linked project case studies with clear role and collaboration labels.
+- Eight case studies grouped by navigation and planning, manipulation and
+  integration, and multi-robot systems. Project links can be shared directly.
+- Keyboard-accessible project tabs, touch-friendly filters and expandable
+  research interests.
 - Source-backed Reach-Avoid RL figures, official Swarm Rescue and ICRA research links,
   and project-linked YouTube recordings with short, locally hosted humanoid simulation clips.
-- Live public GitHub feed that updates from the GitHub API without a redeploy.
-- Research, education, competition work, systems-engineering trajectory, and
-  direct contact channels.
+- An about section and direct résumé, GitHub, LinkedIn and email links.
 - Responsive layout and reduced-motion support for desktop and mobile.
 
 ## Technology
@@ -28,15 +26,6 @@ humanoid navigation, perception, and manipulation.
 - Vitest and Testing Library
 - Lucide icons
 - GitHub Actions and GitHub Pages
-
-## Live GitHub activity
-
-The “What I’m working on” section requests Ajan's public repository feed from
-GitHub's API in the visitor's browser, sorts it by recent pushes, and shows the
-latest described projects while excluding profile, portfolio, and duplicate
-workspace repositories. No token or secret is embedded. If GitHub is
-unavailable or rate-limited, the interface falls back to a curated set of
-flagship repositories.
 
 ## Local development
 
@@ -53,13 +42,13 @@ npm test
 npm run build
 ~~~
 
-The repository also includes a fixed weighted scorecard under `quality/`.
-It records the pre-improvement baseline, final assessment, and strict visual
-verdict. Recalculate either recorded assessment with:
+The previous assessments remain under `quality/`. The current recruiter
+scorecard uses three Lighthouse runs, desktop and mobile visual reviews,
+and checks for recruiter scanning, interaction and reliability. Score a current
+assessment with:
 
 ~~~bash
-npm run score:quality -- quality/baseline.json
-npm run score:quality -- quality/final.json
+node scripts/score-quality.mjs quality/recruiter-scorecard.json path/to/assessment.json
 ~~~
 
 ## Deployment
@@ -73,4 +62,4 @@ GitHub Pages project site.
 
 - [Live portfolio](https://ajanm27.github.io/ajan-portfolio/)
 - [GitHub profile](https://github.com/AjanM27)
-- [LinkedIn](https://www.linkedin.com/in/ajanmuthuraj/)
+- [LinkedIn](https://www.linkedin.com/in/ajan-muthuraj/)

@@ -4,79 +4,67 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 
-class IntersectionObserverStub {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
-
 describe('portfolio interactions', () => {
-  afterEach(() => cleanup())
-
   beforeEach(() => {
-    vi.stubGlobal('IntersectionObserver', IntersectionObserverStub)
-    vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})))
+    window.history.replaceState(null, '', '/')
     Element.prototype.scrollIntoView = vi.fn()
   })
 
-  it('switches project category and case-study tabs', () => {
+  afterEach(() => cleanup())
+
+  it('filters projects and opens a case study', () => {
     render(<App />)
-
-    fireEvent.click(screen.getByRole('tab', { name: 'Autonomy03' }))
-    fireEvent.click(screen.getByRole('tab', { name: /Time-varying DDQN/ }))
-
+    fireEvent.click(screen.getByRole('button', { name: 'Navigation & planning' }))
+    fireEvent.click(screen.getByRole('tab', { name: 'Reach–avoid RL' }))
     expect(screen.getByRole('heading', { name: 'Reach–avoid RL in time-varying environments' })).toBeInTheDocument()
     expect(screen.getByText('DDQN')).toBeInTheDocument()
+    expect(window.location.hash).toBe('#project=reach-avoid')
   })
 
-  it('shows source-backed Swarm Rescue evidence and video archive', () => {
+  it('supports arrow keys and exposes the selected tab and its panel', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('tab', { name: /Swarm Rescue/ }))
-    expect(screen.getByText('Official challenge results')).toBeInTheDocument()
-    expect(screen.getByText('ICRA 2026 XPLORE workshop poster')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Simulation of 9 drones in Isaac Sim/ })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=07T3-0PnAlo')
+    const initial = screen.getByRole('tab', { selected: true })
+    initial.focus()
+    fireEvent.keyDown(initial, { key: 'ArrowRight' })
+    const next = screen.getByRole('tab', { name: 'UR5 and eBot', selected: true })
+    expect(next).toHaveFocus()
+    expect(initial).toHaveAttribute('tabindex', '-1')
+    expect(screen.getByRole('tabpanel')).toHaveAccessibleName('UR5 and eBot')
+  })
 
-    fireEvent.click(screen.getByRole('tab', { name: /Humanoid system/ }))
+  it('opens a shared project outside the default filter', () => {
+    window.history.replaceState(null, '', '#project=swarm-rescue')
+    render(<App />)
+    expect(screen.getByRole('button', { name: 'Multi-robot systems', pressed: true })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Swarm Rescue', selected: true })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Official challenge results' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'ICRA 2026 XPLORE workshop poster' })).toBeInTheDocument()
+  })
+
+  it('keeps project recordings inside their cases', () => {
+    render(<App />)
+    expect(screen.queryByRole('heading', { name: 'Robotics simulations' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Watch the nine-drone Isaac Sim demo' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=07T3-0PnAlo')
+    fireEvent.click(screen.getByRole('tab', { name: 'Hospital humanoid' }))
     expect(screen.getByLabelText('Navigation in Gazebo')).toHaveAttribute('src', expect.stringMatching(/\/media\/humanoid-navigation\.mp4$/))
     expect(screen.getByRole('link', { name: 'Watch the full humanoid simulation demo' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mj8LEdT97FQ')
   })
 
-  it('switches the engineering method readout', () => {
+  it('makes the résumé and learning interests easy to find', () => {
     render(<App />)
-
-    fireEvent.click(screen.getByRole('tab', { name: /Stress the interfaces/ }))
-
-    expect(screen.getByRole('heading', { name: 'Most robotics failures live between good subsystems.' })).toBeInTheDocument()
-    expect(screen.getByText(/stale maps, noisy sensing/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'View résumé' })).toHaveAttribute('href', expect.stringMatching(/\/Ajan_Muthuraj_Resume\.pdf$/))
+    expect(screen.getByText('Vision-language-action models and RL')).toBeInTheDocument()
+    expect(screen.getByText('“Anything can be learnt.”')).toBeInTheDocument()
+    expect(screen.getAllByText(/Systems Engineer at Dai-ichi Life Techno Cross/)).toHaveLength(2)
   })
 
-  it('offers the resume from the header and about section', () => {
+  it('exposes mobile navigation state and closes it after navigation', () => {
     render(<App />)
-
-    const links = screen.getAllByRole('link', { name: /résumé/i })
-    expect(links.length).toBeGreaterThanOrEqual(2)
-    expect(links[0].getAttribute('href')).toMatch(/\/Ajan_Muthuraj_Resume\.pdf$/)
-  })
-
-  it('presents the full robotics system and current DLTX role', () => {
-    render(<App />)
-
-    expect(screen.getByLabelText('Five-layer robotics system cross-section')).toBeInTheDocument()
-    expect(screen.getByText('Mechanics')).toBeInTheDocument()
-    expect(screen.getByText('Perception')).toBeInTheDocument()
-    expect(screen.getAllByText(/Systems Engineer/).length).toBeGreaterThanOrEqual(2)
-    expect(screen.getByText(/The handoff is part of the system/)).toBeInTheDocument()
-    expect(screen.queryByText(/Upcoming systems-engineering role/)).not.toBeInTheDocument()
-  })
-
-  it('exposes mobile navigation state and closes the menu after navigation', () => {
-    render(<App />)
-
     const menu = screen.getByRole('button', { name: 'Toggle navigation' })
     expect(menu).toHaveAttribute('aria-expanded', 'false')
     fireEvent.click(menu)
     expect(menu).toHaveAttribute('aria-expanded', 'true')
-    fireEvent.click(screen.getByRole('button', { name: 'Work' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Projects' }))
     expect(menu).toHaveAttribute('aria-expanded', 'false')
   })
 })
