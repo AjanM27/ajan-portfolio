@@ -110,9 +110,11 @@ function App() {
     const showHash = () => {
       const hash = window.location.hash
       if (hash.startsWith('#project=')) {
-        const id = hash.slice('#project='.length)
+        const requestedId = hash.slice('#project='.length)
+        const id = requestedId === 'multi-robot-slam' ? 'collective-navigation' : requestedId
         const match = projectGroups.find((item) => item.projectIds.includes(id))
         if (!match) return
+        if (id !== requestedId) window.history.replaceState(null, '', projectHash(id))
         setGroupId(match.id)
         setProjectId(id)
         cancelAnimationFrame(frame)
@@ -238,8 +240,8 @@ function App() {
               <article className="experience-card">
                 <p className="eyebrow">Jun to Jul 2025 · IIT Roorkee</p>
                 <h3>Robotics Research Intern</h3>
-                <p>I worked on a simulated hospital humanoid, connecting RGB-D perception and Nav2 navigation with MoveIt 2 manipulation.</p>
-                <a className="evidence-link" href={projectHash('humanoid')} onClick={reopenProject}>Open the humanoid project <ArrowRight size={15} aria-hidden="true" /></a>
+                <p>I connected RGB-D perception and Nav2 navigation with MoveIt 2 manipulation in a simulated humanoid.</p>
+                <a className="evidence-link" href={projectHash('humanoid')} onClick={reopenProject}>Open humanoid navigation and manipulation <ArrowRight size={15} aria-hidden="true" /></a>
               </article>
               <article className="experience-card">
                 <p className="eyebrow">Student leadership · IIT Madras</p>
