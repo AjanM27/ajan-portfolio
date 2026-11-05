@@ -18,13 +18,6 @@ export type Project = {
   collaborative?: boolean
 }
 
-export const projectGroups: { id: string; label: string; projectIds: string[] }[] = [
-  { id: 'selected', label: 'Highlights', projectIds: ['isaac-drone', 'logistics-cobot', 'reach-avoid', 'humanoid'] },
-  { id: 'navigation', label: 'Navigation & planning', projectIds: ['isaac-drone', 'adaptive-rrt', 'reach-avoid'] },
-  { id: 'manipulation', label: 'Manipulation & integration', projectIds: ['logistics-cobot', 'humanoid'] },
-  { id: 'multi-robot', label: 'Multi-robot systems', projectIds: ['swarm-rescue', 'multi-robot-slam', 'swarm-rl'] },
-]
-
 export const projects: Project[] = [
   {
     id: 'isaac-drone', title: 'Autonomous UAV exploration in Isaac Sim', shortTitle: 'Isaac Sim UAV', domain: 'Autonomy stack',
@@ -112,7 +105,7 @@ export const projects: Project[] = [
     outcome: 'Benchmarked path length and replanning behavior across dynamic simulation scenarios; see the linked repository for comparisons and baseline definitions.',
     role: 'Collaborative algorithm implementation, simulation design and planner evaluation.',
     tags: ['RRT*', 'LPA*', 'Python', 'Pygame', 'Planning'], href: 'https://github.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-',
-    media: { src: 'https://raw.githubusercontent.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-/main/trimmed.gif', label: 'Project planning demonstration', width: 1030, height: 681 }, collaborative: true,
+    media: { src: '/media/adaptive-rrt-replanning.svg', label: 'Illustration of the replanning strategy. The original planner code and evaluation are linked below.', width: 960, height: 580 }, collaborative: true,
   },
   {
     id: 'logistics-cobot', title: 'Package handling with a UR5 and eBot', shortTitle: 'UR5 and eBot', domain: 'e-Yantra · IIT Bombay',
@@ -126,7 +119,86 @@ export const projects: Project[] = [
     evidenceLinks: [{ label: 'Official e-Yantra competition themes', url: 'https://portal.e-yantra.org/past-themes' }],
     collaborative: true,
   },
+  {
+    id: 'cubitect', title: 'Cubitect modular robotic cubes', shortTitle: 'Cubitect', domain: 'Electronics Club · Project lead',
+    summary: 'I led work on cubes designed to move and connect so they could form a structure together.',
+    challenge: 'A cube needs a way to move without an external drive, and the group needs a way to assign each cube a destination.',
+    build: 'Explored reaction-wheel actuation and controlled toppling. Built a vision-based tracking and assignment pipeline using A* and the Hungarian algorithm.',
+    outcome: 'Developed the actuation and coordination approach and worked on a ROS 2 and Gazebo test environment.',
+    role: 'Project lead across the mechanical concept, actuation, simulation and multi-cube coordination.',
+    tags: ['Reaction wheels', 'ROS 2', 'Gazebo', 'A*', 'Hungarian algorithm'],
+    href: 'https://www.linkedin.com/in/ajan-muthuraj/', linkLabel: 'Cubitect on LinkedIn',
+    collaborative: true,
+  },
+  {
+    id: 'geoguide', title: 'GeoGuide overhead-vision rover', shortTitle: 'GeoGuide rover', domain: 'e-Yantra · IIT Bombay',
+    summary: 'Our rover followed routes through a physical arena using event detections from an overhead camera.',
+    challenge: 'Classify events, work out where they are on the map and send the rover to the right places in priority order.',
+    build: 'Used OpenCV and ResNet-50 for event classification, Dijkstra for routes, and ArUco/QGIS for positioning and georeferencing. The ESP32 received commands over Wi-Fi/TCP.',
+    outcome: 'Built a working prototype that combined overhead localization and planning with on-robot IR line following.',
+    role: 'Worked on the team’s vision-guided navigation and the interfaces between the laptop and rover.',
+    tags: ['OpenCV', 'ResNet-50', 'Dijkstra', 'ArUco', 'ESP32', 'TCP'],
+    href: 'https://www.linkedin.com/in/ajan-muthuraj/', linkLabel: 'GeoGuide on LinkedIn',
+    evidenceLinks: [{ label: 'Official e-Yantra competition themes', url: 'https://portal.e-yantra.org/past-themes' }],
+    collaborative: true,
+  },
+  {
+    id: 'solar-tracker', title: 'Dual-axis solar tracker', shortTitle: 'Solar tracker', domain: 'IIT Madras · Instrumentation and control',
+    summary: 'A physical controls project that adjusts a solar panel in two axes as the light direction changes.',
+    challenge: 'Use low-cost light sensors to estimate how to turn the panel, then correct the angle with feedback.',
+    build: 'Compared light readings across directions and used PID feedback to drive two servos. Designed mechanical parts in Fusion 360 and added an OLED readout.',
+    outcome: 'Integrated the sensing, two-axis mechanism and feedback controller in a working course prototype.',
+    role: 'Worked across CAD, sensor and actuator integration, feedback control and voltage monitoring.',
+    tags: ['PID', 'LDRs', 'Servo control', 'Fusion 360', 'Embedded systems'],
+    href: 'https://www.linkedin.com/in/ajan-muthuraj/', linkLabel: 'Solar tracker on LinkedIn',
+  },
+  {
+    id: 'gesture-rover', title: 'Gesture-controlled rover and arm', shortTitle: 'Gesture rover', domain: 'Embedded prototype',
+    summary: 'An early project where hand movements drove a small rover and a servo-operated arm.',
+    challenge: 'Translate motion and flex-sensor readings into commands that the rover and arm can execute over a wireless link.',
+    build: 'Used an MPU6050, flex sensing and Arduino sketches. The rover received motor commands over 433 MHz RF, and the arm received servo commands over nRF24L01.',
+    outcome: 'Published transmitter and receiver sketches for both the rover and the arm.',
+    role: 'Built an educational prototype spanning sensing, radio communication and motor and servo control.',
+    tags: ['Arduino C++', 'MPU6050', 'RF', 'Servo control'],
+    href: 'https://github.com/AjanM27/Gesture-Controlled-Defence-Rover',
+    evidenceLinks: [{ label: 'ESP32 TCP workshop example', url: 'https://github.com/AjanM27/Elec-club-session-wifi-chat-between-2-esp32s' }],
+  },
+  {
+    id: 'gazebo-tooling', title: 'Gazebo models, worlds and C++ plugins', shortTitle: 'Gazebo tooling', domain: 'Simulation tooling',
+    summary: 'Small examples that helped me understand how robot descriptions, sensors and simulator plugins fit together.',
+    challenge: 'Isolate simulator behaviors so I can inspect one sensor, model or plugin at a time.',
+    build: 'Collected C++ plugin examples for model motion, world changes and frame capture, plus mobile-robot models with depth and LiDAR sensing.',
+    outcome: 'Published CMake-based plugin projects, reusable model assets and a ROS 1 launch example.',
+    role: 'Built and documented reusable examples for testing Gazebo Classic behavior.',
+    tags: ['C++', 'CMake', 'Gazebo Classic', 'SDF', 'URDF', 'ROS 1'],
+    href: 'https://github.com/AjanM27/GazeboPlugins',
+    evidenceLinks: [
+      { label: 'Gazebo robot and sensor models', url: 'https://github.com/AjanM27/GazeboModels' },
+      { label: 'ROS 1 robot package', url: 'https://github.com/AjanM27/my_robot-package' },
+    ],
+  },
+  {
+    id: 'transcript-ner', title: 'Entity detection in speech transcripts', shortTitle: 'Transcript NER', domain: 'Applied ML assignment',
+    summary: 'A Python assignment for finding and evaluating personally identifiable text spans in speech-style transcripts.',
+    challenge: 'Translate token predictions into exact character spans and measure both detection quality and latency.',
+    build: 'Implemented DistilBERT token classification, BIO-to-span decoding and rule-based validation.',
+    outcome: 'Published scripts for training, exact-span precision/recall/F1 evaluation and batch-size-one latency measurement.',
+    role: 'Built the model pipeline and the scripts that make its outputs and timing inspectable.',
+    tags: ['Python', 'PyTorch', 'DistilBERT', 'Model evaluation'],
+    href: 'https://github.com/AjanM27/pii-ner-assignment',
+  },
 ]
+
+export const projectGroups: { id: string; label: string; projectIds: string[] }[] = [
+  { id: 'selected', label: 'Highlights', projectIds: ['isaac-drone', 'logistics-cobot', 'reach-avoid', 'humanoid'] },
+  { id: 'navigation', label: 'Navigation & planning', projectIds: ['isaac-drone', 'adaptive-rrt', 'reach-avoid', 'geoguide'] },
+  { id: 'manipulation', label: 'Manipulation & integration', projectIds: ['logistics-cobot', 'humanoid', 'cubitect'] },
+  { id: 'multi-robot', label: 'Multi-robot systems', projectIds: ['swarm-rescue', 'multi-robot-slam', 'swarm-rl', 'cubitect'] },
+  { id: 'embedded', label: 'Embedded & controls', projectIds: ['geoguide', 'gesture-rover', 'solar-tracker', 'cubitect'] },
+  { id: 'software', label: 'Simulation & software', projectIds: ['gazebo-tooling', 'transcript-ner', 'isaac-drone'] },
+  { id: 'all', label: 'All projects', projectIds: projects.map((project) => project.id) },
+]
+
 
 export const interests = [
   {

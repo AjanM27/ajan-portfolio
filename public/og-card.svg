@@ -4,8 +4,7 @@
   <path d="M980 0v630M1050 0v630M1120 0v630M900 135h300M900 205h300M900 275h300M900 345h300M900 415h300M900 485h300" stroke="#386056" opacity=".8"/>
   <path d="M946 382l73-147 66 73 53-115" fill="none" stroke="#d5f58d" stroke-width="4"/>
   <g fill="#d5f58d"><circle cx="946" cy="382" r="8"/><circle cx="1019" cy="235" r="8"/><circle cx="1085" cy="308" r="8"/><circle cx="1138" cy="193" r="8"/></g>
-  <rect x="72" y="74" width="64" height="64" rx="14" fill="#d5f58d"/>
-  <text x="104" y="113" text-anchor="middle" font-family="monospace" font-size="22" font-weight="bold" fill="#142d2b">AM</text>
+  <text x="72" y="120" font-family="monospace" font-size="22" font-weight="bold" fill="#d5f58d">PORTFOLIO</text>
   <text x="72" y="256" font-family="Arial, sans-serif" font-size="90" font-weight="bold" fill="#ecf3e9">Ajan Muthuraj</text>
   <text x="72" y="338" font-family="Arial, sans-serif" font-size="58" font-weight="bold" fill="#d5f58d">Robotics &amp; autonomy</text>
   <text x="74" y="459" font-family="Arial, sans-serif" font-size="29" fill="#ecf3e9">ROS 2 · Motion planning · Manipulation · Robot learning</text>

@@ -10,13 +10,16 @@ humanoid navigation, perception, and manipulation.
 
 ## Highlights
 
-- Eight case studies grouped by navigation and planning, manipulation and
-  integration, and multi-robot systems. Project links can be shared directly.
+- Fourteen case studies across navigation and planning, manipulation and
+  integration, multi-robot systems, embedded controls, and software tooling.
+  A desktop project index keeps navigation beside the selected case study.
+  Project links can be shared directly.
 - Keyboard-accessible project tabs, touch-friendly filters and expandable
   research interests.
 - Source-backed Reach-Avoid RL figures, official Swarm Rescue and ICRA research links,
   and project-linked YouTube recordings with short, locally hosted humanoid simulation clips.
-- An about section and direct résumé, GitHub, LinkedIn and email links.
+- Work experience, student leadership, spoken languages and direct résumé,
+  GitHub, LinkedIn and email links.
 - Responsive layout and reduced-motion support for desktop and mobile.
 
 ## Technology
