@@ -34,7 +34,11 @@ describe('portfolio interactions', () => {
     fireEvent.click(screen.getByRole('tab', { name: /Swarm Rescue/ }))
     expect(screen.getByText('Official challenge results')).toBeInTheDocument()
     expect(screen.getByText('ICRA 2026 XPLORE workshop poster')).toBeInTheDocument()
-    expect(screen.getByText('Project demo · 01')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Simulation of 9 drones in Isaac Sim/ })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=07T3-0PnAlo')
+
+    fireEvent.click(screen.getByRole('tab', { name: /Humanoid system/ }))
+    expect(screen.getByLabelText('Navigation in Gazebo')).toHaveAttribute('src', expect.stringMatching(/\/media\/humanoid-navigation\.mp4$/))
+    expect(screen.getByRole('link', { name: 'Watch the full humanoid simulation demo' })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mj8LEdT97FQ')
   })
 
   it('switches the engineering method readout', () => {
