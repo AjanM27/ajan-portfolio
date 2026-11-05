@@ -16,10 +16,16 @@ export type Project = {
   mediaSource?: string
   evidenceLinks?: { label: string; url: string }[]
   gallery?: { src: string; label: string }[]
+  clips?: { src: string; label: string }[]
   imageFit?: 'cover' | 'contain'
   featured?: boolean
   collaborative?: boolean
 }
+
+export const demos = [
+  { id: '07T3-0PnAlo', title: 'Simulation of 9 drones in Isaac Sim' },
+  { id: 'mj8LEdT97FQ', title: 'Humanoid Robot in a hospital assisting patients' },
+] as const
 
 export const projects: Project[] = [
   {
@@ -30,7 +36,8 @@ export const projects: Project[] = [
     outcome: 'A documented path from simulated sensors to SLAM, planning, commands and multi-drone trials.',
     role: 'System architecture, simulation integration, flight control, SLAM and autonomous exploration.',
     tags: ['Isaac Sim', 'ROS 2', 'ArduPilot', 'RTAB-Map', 'Python'], href: 'https://github.com/AjanM27/isaac-sim-drone-autonomy',
-    image: '/media/drone-reference.jpg', mediaLabel: 'Representative visual · Project Kei · CC BY-SA 4.0', mediaSource: 'https://commons.wikimedia.org/wiki/File:Quadcopter_Drone_in_flight.jpg', imageFit: 'cover', featured: true,
+    image: '/media/isaac-drone-demo.jpg', mediaLabel: 'Thumbnail from the nine-drone Isaac Sim recording', imageFit: 'contain', featured: true,
+    evidenceLinks: [{ label: 'Watch the nine-drone Isaac Sim demo', url: `https://www.youtube.com/watch?v=${demos[0].id}` }],
   },
   {
     id: 'reach-avoid', index: '02', title: 'Reach–avoid RL in time-varying environments', shortTitle: 'Time-varying DDQN', domain: 'B.Tech thesis',
@@ -45,7 +52,10 @@ export const projects: Project[] = [
       { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-time-slices.png', label: 'Time-conditioned value-function slices from the research implementation' },
       { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/metrics-summary.png', label: 'Experimental metrics and rollout evaluation' },
     ],
-    evidenceLinks: [{ label: 'Research implementation and methodology', url: 'https://github.com/AjanM27/ddqn-reach-avoid-rl/blob/main/docs/PROJECT_OVERVIEW.md' }],
+    evidenceLinks: [
+      { label: 'Research implementation and methodology', url: 'https://github.com/AjanM27/ddqn-reach-avoid-rl/blob/main/docs/PROJECT_OVERVIEW.md' },
+      { label: 'B.Tech thesis poster (PDF)', url: '/media/reach-avoid-poster.pdf' },
+    ],
   },
   {
     id: 'swarm-rescue', index: '03', title: 'Swarm Rescue Challenge · ten-drone autonomous exploration', shortTitle: 'Swarm Rescue', domain: 'Research · competition',
@@ -56,8 +66,7 @@ export const projects: Project[] = [
     role: 'Collaborative multi-drone autonomy research and integration; see the official results and co-authored poster for team attribution.',
     tags: ['Swarm robotics', 'FastSLAM', 'ICP', 'Frontier exploration', 'Map fusion'],
     href: 'https://openreview.net/forum?id=tbvhPL9Ftk',
-    image: '/media/drone-reference.jpg', mediaLabel: 'Representative drone photo, not a competition screenshot · Project Kei · CC BY-SA 4.0',
-    mediaSource: 'https://commons.wikimedia.org/wiki/File:Quadcopter_Drone_in_flight.jpg', imageFit: 'cover', featured: true, collaborative: true,
+    image: '/media/swarm-rescue-cover.webp', mediaLabel: 'Illustrated Swarm Rescue project cover supplied by Ajan Muthuraj', imageFit: 'contain', featured: true, collaborative: true,
     evidenceLinks: [
       { label: 'Official challenge results', url: 'https://www.ip-paris.fr/en/news/swarm-rescue-challenge-final-2025-2026-save-lives-controlling-swarm-drones' },
       { label: 'ICRA 2026 XPLORE workshop poster', url: 'https://openreview.net/forum?id=tbvhPL9Ftk' },
@@ -82,8 +91,12 @@ export const projects: Project[] = [
     outcome: 'Approximately 96.6% grasp success across 30 reported experimental trials.',
     role: 'Robot simulation, navigation, perception, 3D localization and manipulation integration.',
     tags: ['ROS 2', 'Nav2', 'MoveIt 2', 'YOLOv9', 'Gazebo'], href: 'https://www.linkedin.com/in/ajanmuthuraj/',
-    image: '/media/humanoid-reference.webp', mediaLabel: 'Representative visual only · actual simulation documented in IIT Roorkee poster', mediaSource: 'https://commons.wikimedia.org/wiki/File:Humanoid_Robot.webp', imageFit: 'cover', featured: true,
-    evidenceLinks: [{ label: 'IIT Roorkee research context', url: 'https://www.iitr.ac.in/' }],
+    image: '/media/humanoid-hospital.webp', mediaLabel: 'Hospital simulation screenshot from the co-authored IIT Roorkee SPARK poster', imageFit: 'contain', featured: true,
+    clips: [
+      { label: 'Navigation in Gazebo', src: '/media/humanoid-navigation.mp4' },
+      { label: 'Cup manipulation in Gazebo and RViz', src: '/media/humanoid-manipulation.mp4' },
+    ],
+    evidenceLinks: [{ label: 'Watch the full humanoid simulation demo', url: `https://www.youtube.com/watch?v=${demos[1].id}` }],
   },
   {
     id: 'swarm-rl', index: '06', title: 'RL-based swarm navigation', shortTitle: 'Swarm RL', domain: 'Inter-IIT · collaboration',

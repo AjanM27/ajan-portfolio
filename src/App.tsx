@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react'
 import { ArrowDown, ArrowUpRight, Award, BriefcaseBusiness, CircuitBoard, CircleDot, Code2, Download, Gauge, GraduationCap, Mail, Menu, Route, ScanEye, UserRound, Wrench, X } from 'lucide-react'
-import { engineeringLoop, milestones, profile, projects, type Project } from './data/portfolio'
+import { demos, engineeringLoop, milestones, profile, projects, type Project } from './data/portfolio'
 import './App.css'
 
 type GithubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; pushed_at: string; fork: boolean }
@@ -110,7 +110,7 @@ function App() {
     event.currentTarget.style.setProperty('--my', (((event.clientY - rect.top) / rect.height - 0.5) * 2).toFixed(2))
   }
   const navigate = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); setMenuOpen(false) }
-  const navItems = [['about', 'About'], ['work', 'Work'], ['method', 'Method'], ['now', 'Now'], ['story', 'Journey']]
+  const navItems = [['about', 'About'], ['work', 'Work'], ['demos', 'Demos'], ['method', 'Method'], ['now', 'Now'], ['story', 'Journey']]
 
   return <div className="site-shell">
     <div className="scroll-progress" aria-hidden="true"><span style={{ transform: `scaleX(${scrollProgress})` }} /></div>
@@ -193,19 +193,32 @@ function App() {
               <div><span>MY SCOPE</span><p>{activeProject.role}</p></div>
             </div>
             {activeProject.gallery && <div className="project-figures"><h4>Actual project figures</h4><div className="project-figure-grid">{activeProject.gallery.map((figure) => <a key={figure.src} href={figure.src} target="_blank" rel="noreferrer"><img src={figure.src} alt={figure.label} loading="lazy" /><span>{figure.label} <ArrowUpRight size={13} /></span></a>)}</div></div>}
-            {activeProject.evidenceLinks && <div className="project-sources"><h4>Supporting evidence</h4>{activeProject.evidenceLinks.map((link) => <a key={link.url} href={link.url} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}</div>}
+            {activeProject.clips && (
+              <div className="project-figures">
+                <h4>Simulation clips</h4>
+                <div className="project-clip-grid">
+                  {activeProject.clips.map((clip) => (
+                    <figure key={clip.src}>
+                      <video controls muted playsInline preload="none" src={publicUrl(clip.src)} aria-label={clip.label} />
+                      <figcaption>{clip.label}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            )}
+            {activeProject.evidenceLinks && <div className="project-sources"><h4>Supporting evidence</h4>{activeProject.evidenceLinks.map((link) => <a key={link.url} href={publicUrl(link.url)} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}</div>}
             <div className="case-footer"><div className="tag-list">{activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="button dark-button" href={activeProject.href} target="_blank" rel="noreferrer">Inspect evidence <ArrowUpRight size={16} /></a></div>
           </div>
         </article>
       </section>
 
       <section id="demos" className="demo-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">03 / VIDEO ARCHIVE</p><h2>Watch the work,<br /><em>not just the screenshots.</em></h2><p>Two demonstration links supplied with this portfolio. Videos open on YouTube; the recordings are not presented as evidence for a specific project until their individual titles and ownership are confirmed.</p></div>
+        <div className="section-heading reveal"><p className="section-index">PROJECT DEMOS</p><h2>Robotics simulations<br /><em>in action.</em></h2><p>Watch the nine-drone Isaac Sim and hospital humanoid demonstrations on YouTube.</p></div>
         <div className="demo-grid">
-          {[{id:'07T3-0PnAlo', label:'Project demo · 01'}, {id:'mj8LEdT97FQ', label:'Project demo · 02'}].map((video) =>
+          {demos.map((video) =>
             <a className="demo-card" href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noreferrer" key={video.id}>
-              <img src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} loading="lazy" alt={`${video.label} — original YouTube thumbnail`} />
-              <div><b>{video.label}</b><span>Watch original recording <ArrowUpRight size={15} /></span></div>
+              <img src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} loading="lazy" alt="" />
+              <div><b>{video.title}</b><span>Watch original recording <ArrowUpRight size={15} /></span></div>
             </a>
           )}
         </div>

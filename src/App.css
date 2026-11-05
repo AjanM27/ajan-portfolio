@@ -196,6 +196,10 @@ button:focus-visible,a:focus-visible { outline:3px solid var(--orange); outline-
 .project-figure-grid a { display:flex; flex-direction:column; min-width:0; text-decoration:none; color:inherit; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:#f6f6f3; }
 .project-figure-grid img { width:100%; aspect-ratio:1.8; object-fit:contain; padding:8px; background:#eef1f0; }
 .project-figure-grid span { display:flex; align-items:center; gap:4px; padding:9px; font-size:11px; line-height:1.4; }
+.project-clip-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:12px; }
+.project-clip-grid figure { min-width:0; margin:0; }
+.project-clip-grid video { display:block; width:100%; aspect-ratio:16/9; border-radius:8px; background:#121411; }
+.project-clip-grid figcaption { padding-top:6px; font-size:12px; }
 .project-sources { display:flex; flex-direction:column; align-items:flex-start; gap:8px; }
 .project-sources a { display:inline-flex; align-items:center; gap:6px; color:var(--blue); font-size:12px; line-height:1.5; text-decoration:underline; text-underline-offset:3px; }
 .demo-section { background:#0c1a20; color:#f6f5f0; }

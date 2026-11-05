@@ -15,7 +15,7 @@ humanoid navigation, perception, and manipulation.
   embodied robotics, and the four-step engineering method.
 - Evidence-linked project case studies with clear role and collaboration labels.
 - Source-backed Reach-Avoid RL figures, official Swarm Rescue and ICRA research links,
-  and a link-only video archive for user-supplied demonstration recordings.
+  and project-linked YouTube recordings with short, locally hosted humanoid simulation clips.
 - Live public GitHub feed that updates from the GitHub API without a redeploy.
 - Research, education, competition work, systems-engineering trajectory, and
   direct contact channels.
