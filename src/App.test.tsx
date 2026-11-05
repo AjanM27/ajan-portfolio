@@ -58,13 +58,17 @@ describe('portfolio interactions', () => {
     expect(window.location.hash).toBe('#project=collective-navigation')
   })
 
-  it('lists all projects and shows the Adaptive RRT* capture and schematic', () => {
+  it('lists all projects and shows the Adaptive RRT* capture, schematic, and simulation', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: 'All projects' }))
     expect(screen.getAllByRole('tab')).toHaveLength(14)
     fireEvent.click(screen.getByRole('tab', { name: 'Adaptive RRT*' }))
     expect(screen.getByRole('img', { name: /Original planner capture/ })).toHaveAttribute('src', expect.stringMatching(/adaptive-rrt-simulation\.webp$/))
     expect(screen.getByRole('link', { name: /Replanning schematic/ })).toHaveAttribute('href', `${import.meta.env.BASE_URL}media/adaptive-rrt-replanning.svg`)
+    const simulation = screen.getByLabelText(/Adaptive RRT\* simulation/)
+    expect(simulation).toHaveAttribute('src', `${import.meta.env.BASE_URL}media/adaptive-rrt-demo.mp4`)
+    expect(simulation).toHaveAttribute('poster', `${import.meta.env.BASE_URL}media/adaptive-rrt-demo-poster.webp`)
+    expect(simulation).toHaveAttribute('controls')
     fireEvent.click(screen.getByRole('button', { name: 'Embedded & controls' }))
     fireEvent.click(screen.getByRole('tab', { name: 'GeoGuide rover' }))
     expect(screen.getByRole('heading', { name: 'GeoGuide · The Vision-Guided Rover' })).toBeInTheDocument()

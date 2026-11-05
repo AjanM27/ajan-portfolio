@@ -108,6 +108,7 @@ export const projects: Project[] = [
     tags: ['RRT*', 'LPA*', 'Python', 'Pygame', 'Planning'], href: 'https://github.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-',
     media: { src: '/media/adaptive-rrt-simulation.webp', label: 'Original planner capture showing the search tree, path and moving obstacle', width: 711, height: 686 },
     gallery: [{ src: '/media/adaptive-rrt-replanning.svg', label: 'Replanning schematic showing the blocked route and detour' }],
+    clips: [{ src: '/media/adaptive-rrt-demo.mp4', poster: '/media/adaptive-rrt-demo-poster.webp', label: 'Adaptive RRT* simulation showing the robot replanning around a moving obstacle' }],
     collaborative: true,
   },
   {

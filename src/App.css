@@ -113,6 +113,7 @@ figcaption { padding:9px 11px; color:var(--muted); font-size:12px; line-height:1
 .project-figure-grid img { width:100%; aspect-ratio:1.8; object-fit:contain; background:#f0f1e7; }
 .project-figure-grid span { display:flex; align-items:center; gap:4px; padding:8px; font-size:12px; line-height:1.4; }
 .project-figure-grid svg { flex:none; }
+.project-clip-grid > figure:only-child { grid-column:1 / -1; }
 .project-clip-grid video { display:block; width:100%; aspect-ratio:16/9; border-radius:8px; background:var(--forest-deep); }
 .project-clip-grid figcaption { padding:6px 0 0; }
 
