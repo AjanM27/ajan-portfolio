@@ -35,7 +35,7 @@ export const projects: Project[] = [
     summary: 'For my B.Tech thesis, I trained a double deep Q-network (DDQN) to reach a moving target while avoiding obstacles that also move.',
     challenge: 'A policy that only sees position cannot distinguish identical locations at different times when the safe and target sets are moving.',
     build: 'Augmented the state with time, corrected baseline implementation issues, and trained a DDQN against a discounted reach–avoid Bellman objective.',
-    outcome: 'In the thesis simulation, grid rollout success was 79.5% and 76.0% across two environments. Precision among states predicted safe reached 94.4% on the two-obstacle map.',
+    outcome: 'Evaluated the learned policy against moving safe and target zones in simulation. Precision among states predicted safe reached 94.4% on the two-obstacle map.',
     role: 'I formulated the problem, designed the environments, implemented and trained the model, and ran the evaluation.',
     tags: ['DDQN', 'PyTorch', 'Safe RL', 'Gym', 'Dynamic systems'], href: 'https://github.com/AjanM27/ddqn-reach-avoid-rl',
     media: { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-rollout-action.png', label: 'Actual project evaluation figure · value, rollout and action', width: 1200, height: 400 },

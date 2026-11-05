@@ -23,7 +23,7 @@ function reopenProject(event: MouseEvent<HTMLAnchorElement>) {
 const highlights = [
   { id: 'isaac-drone', label: 'Autonomy stack', title: 'Nine drones in Isaac Sim', detail: 'ROS 2, ArduPilot, 3D SLAM and frontier exploration' },
   { id: 'logistics-cobot', label: 'Hardware integration', title: 'UR5 arm and mobile rover', detail: 'Marker-based pose estimation, docking and pick-and-place' },
-  { id: 'reach-avoid', label: 'Robot learning', title: 'When safe routes change with time', detail: 'DDQN thesis with rollout results and a research poster' },
+  { id: 'reach-avoid', label: 'Robot learning', title: 'When safe routes change with time', detail: 'Time-aware DDQN, safety evaluation and thesis poster' },
 ] as const
 
 function ProjectMedia({ project }: { project: Project }) {
@@ -175,7 +175,7 @@ function App() {
         <section id="home" className="hero-section">
           <div className="wrap hero-layout">
             <div className="hero-copy">
-              <p className="eyebrow hero-location"><span aria-hidden="true" /> Japan · Systems Engineer at Dai-ichi Life Techno Cross</p>
+              <p className="eyebrow hero-location"><span aria-hidden="true" /> Systems Engineer at Dai-ichi Life Techno Cross</p>
               <h1>Ajan Muthuraj</h1>
               <p className="hero-specialty">Robotics &amp; autonomy</p>
               <p className="hero-lede">I like taking a robotics idea far enough to see where it breaks. I’ve worked across mechanisms, electronics and software, from a gesture-controlled rover to ROS 2 systems for drone exploration and manipulation.</p>
@@ -302,7 +302,9 @@ function App() {
           </div>
         </section>
       </main>
-      <footer className="wrap site-footer"><span>Ajan Muthuraj · Japan</span><a href="#home">Back to top ↑</a></footer>
+      <footer className="site-footer">
+        <div className="wrap footer-inner"><span>Ajan Muthuraj</span><a href="#home">Back to top ↑</a></div>
+      </footer>
     </>
   )
 }
