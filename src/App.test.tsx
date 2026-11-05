@@ -29,6 +29,14 @@ describe('portfolio interactions', () => {
     expect(screen.getByText('DDQN')).toBeInTheDocument()
   })
 
+  it('shows source-backed Swarm Rescue evidence and video archive', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('tab', { name: /Swarm Rescue/ }))
+    expect(screen.getByText('Official challenge results')).toBeInTheDocument()
+    expect(screen.getByText('ICRA 2026 XPLORE workshop poster')).toBeInTheDocument()
+    expect(screen.getByText('Project demo · 01')).toBeInTheDocument()
+  })
+
   it('switches the engineering method readout', () => {
     render(<App />)
 
