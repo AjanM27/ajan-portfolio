@@ -16,15 +16,15 @@ export type Project = {
   mediaSource?: string
   evidenceLinks?: { label: string; url: string }[]
   gallery?: { src: string; label: string }[]
-  clips?: { src: string; label: string }[]
-  imageFit?: 'cover' | 'contain'
+  clips?: { src: string; poster: string; label: string }[]
+  imageSize: readonly [width: number, height: number]
   featured?: boolean
   collaborative?: boolean
 }
 
 export const demos = [
-  { id: '07T3-0PnAlo', title: 'Simulation of 9 drones in Isaac Sim' },
-  { id: 'mj8LEdT97FQ', title: 'Humanoid Robot in a hospital assisting patients' },
+  { id: '07T3-0PnAlo', projectId: 'isaac-drone', title: 'Simulation of 9 drones in Isaac Sim', thumbnail: '/media/isaac-drone-demo.jpg' },
+  { id: 'mj8LEdT97FQ', projectId: 'humanoid', title: 'Humanoid Robot in a hospital assisting patients', thumbnail: '/media/humanoid-hospital.webp' },
 ] as const
 
 export const projects: Project[] = [
@@ -36,7 +36,7 @@ export const projects: Project[] = [
     outcome: 'A documented path from simulated sensors to SLAM, planning, commands and multi-drone trials.',
     role: 'System architecture, simulation integration, flight control, SLAM and autonomous exploration.',
     tags: ['Isaac Sim', 'ROS 2', 'ArduPilot', 'RTAB-Map', 'Python'], href: 'https://github.com/AjanM27/isaac-sim-drone-autonomy',
-    image: '/media/isaac-drone-demo.jpg', mediaLabel: 'Thumbnail from the nine-drone Isaac Sim recording', imageFit: 'contain', featured: true,
+    image: demos[0].thumbnail, mediaLabel: 'Simulation viewport from the nine-drone Isaac Sim recording', imageSize: [1280, 720], featured: true,
     evidenceLinks: [{ label: 'Watch the nine-drone Isaac Sim demo', url: `https://www.youtube.com/watch?v=${demos[0].id}` }],
   },
   {
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     outcome: '79.5% and 76.0% grid rollout success in two time-varying environments; 94.4% predicted-safe precision on the dual-obstacle map. These are simulation results, not a formal guarantee for the learned DDQN.',
     role: 'Problem formulation, environment design, implementation, training, evaluation and thesis research.',
     tags: ['DDQN', 'PyTorch', 'Safe RL', 'Gym', 'Dynamic systems'], href: 'https://github.com/AjanM27/ddqn-reach-avoid-rl',
-    image: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-rollout-action.png', mediaLabel: 'Actual project evaluation figure · value, rollout and action', imageFit: 'contain', featured: true,
+    image: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-rollout-action.png', mediaLabel: 'Actual project evaluation figure · value, rollout and action', imageSize: [1200, 400], featured: true,
     gallery: [
       { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/learned-value-time-slices.png', label: 'Time-conditioned value-function slices from the research implementation' },
       { src: 'https://raw.githubusercontent.com/AjanM27/ddqn-reach-avoid-rl/main/docs/images/metrics-summary.png', label: 'Experimental metrics and rollout evaluation' },
@@ -66,7 +66,7 @@ export const projects: Project[] = [
     role: 'Collaborative multi-drone autonomy research and integration; see the official results and co-authored poster for team attribution.',
     tags: ['Swarm robotics', 'FastSLAM', 'ICP', 'Frontier exploration', 'Map fusion'],
     href: 'https://openreview.net/forum?id=tbvhPL9Ftk',
-    image: '/media/swarm-rescue-cover.webp', mediaLabel: 'Illustrated Swarm Rescue project cover supplied by Ajan Muthuraj', imageFit: 'contain', featured: true, collaborative: true,
+    image: '/media/swarm-rescue-cover.webp', mediaLabel: 'Illustrated Swarm Rescue project cover supplied by Ajan Muthuraj', imageSize: [1100, 619], featured: true, collaborative: true,
     evidenceLinks: [
       { label: 'Official challenge results', url: 'https://www.ip-paris.fr/en/news/swarm-rescue-challenge-final-2025-2026-save-lives-controlling-swarm-drones' },
       { label: 'ICRA 2026 XPLORE workshop poster', url: 'https://openreview.net/forum?id=tbvhPL9Ftk' },
@@ -80,7 +80,7 @@ export const projects: Project[] = [
     outcome: 'Documented collaborative multi-robot navigation and map-fusion experiments. The separate ten-UAV Swarm Rescue research is listed as its own project.',
     role: 'Collaborative research and engineering across navigation, mapping and evaluation.',
     tags: ['Multi-robot', 'SLAM', 'Map fusion', 'MATLAB', 'Control'], href: 'https://github.com/AjanM27/Multi-Robot-SLAM-Navigation',
-    image: 'https://raw.githubusercontent.com/AjanM27/Multi-Robot-SLAM-Navigation/main/Demonstrations/DSR_Maze.gif', mediaLabel: 'Actual collaborative project simulation capture', imageFit: 'contain', featured: true, collaborative: true,
+    image: 'https://raw.githubusercontent.com/AjanM27/Multi-Robot-SLAM-Navigation/main/Demonstrations/DSR_Maze.gif', mediaLabel: 'Actual collaborative project simulation capture', imageSize: [640, 360], featured: true, collaborative: true,
     evidenceLinks: [{ label: 'Simulation source and collaborator attribution', url: 'https://github.com/AjanM27/Multi-Robot-SLAM-Navigation' }],
   },
   {
@@ -91,10 +91,10 @@ export const projects: Project[] = [
     outcome: 'Approximately 96.6% grasp success across 30 reported experimental trials.',
     role: 'Robot simulation, navigation, perception, 3D localization and manipulation integration.',
     tags: ['ROS 2', 'Nav2', 'MoveIt 2', 'YOLOv9', 'Gazebo'], href: 'https://www.linkedin.com/in/ajanmuthuraj/',
-    image: '/media/humanoid-hospital.webp', mediaLabel: 'Hospital simulation screenshot from the co-authored IIT Roorkee SPARK poster', imageFit: 'contain', featured: true,
+    image: demos[1].thumbnail, mediaLabel: 'Hospital simulation screenshot from the co-authored IIT Roorkee SPARK poster', imageSize: [790, 365], featured: true,
     clips: [
-      { label: 'Navigation in Gazebo', src: '/media/humanoid-navigation.mp4' },
-      { label: 'Cup manipulation in Gazebo and RViz', src: '/media/humanoid-manipulation.mp4' },
+      { label: 'Navigation in Gazebo', src: '/media/humanoid-navigation.mp4', poster: '/media/humanoid-navigation-poster.webp' },
+      { label: 'Cup manipulation in Gazebo and RViz', src: '/media/humanoid-manipulation.mp4', poster: '/media/humanoid-manipulation-poster.webp' },
     ],
     evidenceLinks: [{ label: 'Watch the full humanoid simulation demo', url: `https://www.youtube.com/watch?v=${demos[1].id}` }],
   },
@@ -106,7 +106,7 @@ export const projects: Project[] = [
     outcome: 'Reported 94% obstacle-classification accuracy, under 5 cm average mapping error and about 27% better collision-free navigation than a PPO baseline.',
     role: 'Collaborative swarm robotics and simulation work with the IIT Madras team.',
     tags: ['Swarm robotics', 'ROS 2', 'Gazebo', 'TD3', 'Python'], href: 'https://github.com/AjanM27/Swarm_RL_InterIIT',
-    image: 'https://raw.githubusercontent.com/AjanM27/Swarm_RL_InterIIT/main/Videos/Large%20Swarm.gif', mediaLabel: 'Project simulation capture', imageFit: 'contain', collaborative: true,
+    image: 'https://raw.githubusercontent.com/AjanM27/Swarm_RL_InterIIT/main/Videos/Large%20Swarm.gif', mediaLabel: 'Project simulation capture', imageSize: [1280, 720], collaborative: true,
   },
   {
     id: 'adaptive-rrt', index: '07', title: 'Adaptive planning around moving obstacles', shortTitle: 'Adaptive RRT*', domain: 'Motion planning · collaboration',
@@ -116,7 +116,7 @@ export const projects: Project[] = [
     outcome: 'Benchmarked path length and replanning behavior across dynamic simulation scenarios; see the linked repository for comparisons and baseline definitions.',
     role: 'Collaborative algorithm implementation, simulation design and planner evaluation.',
     tags: ['RRT*', 'LPA*', 'Python', 'Pygame', 'Planning'], href: 'https://github.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-',
-    image: 'https://raw.githubusercontent.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-/main/trimmed.gif', mediaLabel: 'Project planning demonstration', imageFit: 'contain', collaborative: true,
+    image: 'https://raw.githubusercontent.com/AjanM27/Dynamic-Path-Planning-with-Adaptive-RRT-/main/trimmed.gif', mediaLabel: 'Project planning demonstration', imageSize: [1030, 681], collaborative: true,
   },
 ]
 

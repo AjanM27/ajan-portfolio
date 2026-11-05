@@ -55,9 +55,11 @@ function timeAgo(value: string) {
 }
 
 function ProjectMedia({ project }: { project: Project }) {
-  return <figure className={`project-media fit-${project.imageFit ?? 'cover'}`}>
-    <img src={publicUrl(project.image)} alt={`${project.title} visual`} loading="lazy" decoding="async" />
-    <div className="media-grid" aria-hidden="true" />
+  const [width, height] = project.imageSize
+  return <figure className="project-media" data-project={project.id}>
+    <div className="project-image">
+      <img src={publicUrl(project.image)} width={width} height={height} alt={project.mediaLabel} loading="lazy" decoding="async" />
+    </div>
     <figcaption>
       <span>{project.mediaLabel}</span>
       {project.mediaSource && <a href={project.mediaSource} target="_blank" rel="noreferrer">Image source <ArrowUpRight size={12} /></a>}
@@ -181,17 +183,13 @@ function App() {
           {tabProjects.map((project) => <button key={project.id} role="tab" aria-selected={activeProject.id === project.id} aria-controls="project-case" className={activeProject.id === project.id ? 'active' : ''} onClick={() => setActiveProjectId(project.id)}><span>{project.index}</span><b>{project.shortTitle}</b><small>{project.domain}</small><i /></button>)}
         </div>
         <article id="project-case" className="project-case" key={activeProject.id} role="tabpanel">
-          <ProjectMedia project={activeProject} />
-          <div className="case-content">
+          <header className="case-intro">
             <div className="case-heading"><p>{activeProject.domain}{activeProject.collaborative ? ' · team work' : ''}</p><span>{activeProject.index} / {String(projects.length).padStart(2, '0')}</span></div>
             <h3>{activeProject.title}</h3>
             <p className="case-summary">{activeProject.summary}</p>
-            <div className="case-decisions">
-              <div><span>THE PROBLEM</span><p>{activeProject.challenge}</p></div>
-              <div><span>WHAT I BUILT</span><p>{activeProject.build}</p></div>
-              <div><span>EVIDENCE</span><p>{activeProject.outcome}</p></div>
-              <div><span>MY SCOPE</span><p>{activeProject.role}</p></div>
-            </div>
+          </header>
+          <div className="case-visuals">
+            <ProjectMedia project={activeProject} />
             {activeProject.gallery && <div className="project-figures"><h4>Actual project figures</h4><div className="project-figure-grid">{activeProject.gallery.map((figure) => <a key={figure.src} href={figure.src} target="_blank" rel="noreferrer"><img src={figure.src} alt={figure.label} loading="lazy" /><span>{figure.label} <ArrowUpRight size={13} /></span></a>)}</div></div>}
             {activeProject.clips && (
               <div className="project-figures">
@@ -199,13 +197,21 @@ function App() {
                 <div className="project-clip-grid">
                   {activeProject.clips.map((clip) => (
                     <figure key={clip.src}>
-                      <video controls muted playsInline preload="none" src={publicUrl(clip.src)} aria-label={clip.label} />
+                      <video controls muted playsInline preload="none" src={publicUrl(clip.src)} poster={publicUrl(clip.poster)} aria-label={clip.label} />
                       <figcaption>{clip.label}</figcaption>
                     </figure>
                   ))}
                 </div>
               </div>
             )}
+          </div>
+          <div className="case-content">
+            <div className="case-decisions">
+              <div><span>THE PROBLEM</span><p>{activeProject.challenge}</p></div>
+              <div><span>WHAT I BUILT</span><p>{activeProject.build}</p></div>
+              <div><span>EVIDENCE</span><p>{activeProject.outcome}</p></div>
+              <div><span>MY SCOPE</span><p>{activeProject.role}</p></div>
+            </div>
             {activeProject.evidenceLinks && <div className="project-sources"><h4>Supporting evidence</h4>{activeProject.evidenceLinks.map((link) => <a key={link.url} href={publicUrl(link.url)} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}</div>}
             <div className="case-footer"><div className="tag-list">{activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="button dark-button" href={activeProject.href} target="_blank" rel="noreferrer">Inspect evidence <ArrowUpRight size={16} /></a></div>
           </div>
@@ -213,12 +219,12 @@ function App() {
       </section>
 
       <section id="demos" className="demo-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">PROJECT DEMOS</p><h2>Robotics simulations<br /><em>in action.</em></h2><p>Watch the nine-drone Isaac Sim and hospital humanoid demonstrations on YouTube.</p></div>
+        <div className="section-heading reveal"><p className="section-index">PROJECT DEMOS</p><h2>Robotics simulations</h2><p>Full recordings from the nine-drone and hospital humanoid projects.</p></div>
         <div className="demo-grid">
           {demos.map((video) =>
-            <a className="demo-card" href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noreferrer" key={video.id}>
-              <img src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} loading="lazy" alt="" />
-              <div><b>{video.title}</b><span>Watch original recording <ArrowUpRight size={15} /></span></div>
+            <a className="demo-card" href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noreferrer" key={video.id} data-project={video.projectId}>
+              <div className="demo-thumb"><img src={publicUrl(video.thumbnail)} loading="lazy" alt="" /></div>
+              <div className="demo-copy"><b>{video.title}</b><span>Watch on YouTube <ArrowUpRight size={15} /></span></div>
             </a>
           )}
         </div>
