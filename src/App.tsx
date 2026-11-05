@@ -1,277 +1,273 @@
-import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from 'react'
-import { ArrowDown, ArrowUpRight, Award, BriefcaseBusiness, CircuitBoard, CircleDot, Code2, Download, Gauge, GraduationCap, Mail, Menu, Route, ScanEye, UserRound, Wrench, X } from 'lucide-react'
-import { demos, engineeringLoop, milestones, profile, projects, type Project } from './data/portfolio'
+import { useEffect, useState, type KeyboardEvent, type MouseEvent } from 'react'
+import { ArrowDown, ArrowRight, ArrowUpRight, Download, Menu, X } from 'lucide-react'
+import { interests, profile, projectGroups, projects, type Project } from './data/portfolio'
 import './App.css'
 
-type GithubRepo = { id: number; name: string; html_url: string; description: string | null; language: string | null; pushed_at: string; fork: boolean }
+const publicUrl = (path: string) => path.startsWith('/') ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path
+const projectHash = (id: string) => `#project=${id}`
+const navigation = [['work', 'Projects'], ['about', 'About'], ['interests', 'Interests'], ['contact', 'Contact']] as const
 
-const projectTabs = [
-  { id: 'featured', label: 'Flagship', projectIds: ['isaac-drone', 'reach-avoid', 'swarm-rescue', 'humanoid'] },
-  { id: 'autonomy', label: 'Autonomy', projectIds: ['isaac-drone', 'reach-avoid', 'adaptive-rrt'] },
-  { id: 'multi', label: 'Multi-robot', projectIds: ['swarm-rescue', 'multi-robot-slam', 'swarm-rl', 'isaac-drone'] },
-  { id: 'embodied', label: 'Embodied', projectIds: ['humanoid', 'isaac-drone'] },
+function focusWork() {
+  document.getElementById('work')?.scrollIntoView()
+  document.getElementById('work-title')?.focus({ preventScroll: true })
+}
+
+function reopenProject(event: MouseEvent<HTMLAnchorElement>) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+  if (event.currentTarget.hash === window.location.hash) {
+    event.preventDefault()
+    focusWork()
+  }
+}
+
+const highlights = [
+  { id: 'isaac-drone', label: 'Autonomy stack', title: 'Nine drones in Isaac Sim', detail: 'ROS 2, ArduPilot, 3D SLAM and frontier exploration' },
+  { id: 'logistics-cobot', label: 'Hardware integration', title: 'UR5 arm and mobile rover', detail: 'Marker-based pose estimation, docking and pick-and-place' },
+  { id: 'reach-avoid', label: 'Robot learning', title: 'When safe routes change with time', detail: 'DDQN thesis with rollout results and a research poster' },
 ] as const
 
-const systemLayers = [
-  { id: 'mechanism', label: 'Mechanics', detail: 'Geometry · kinematics · fit', evidence: 'UR5 · humanoid', icon: Wrench },
-  { id: 'electronics', label: 'Electronics', detail: 'Sensors · embedded I/O', evidence: 'Arduino · ESP32', icon: CircuitBoard },
-  { id: 'perception', label: 'Perception', detail: 'Images · depth · maps', evidence: 'YOLO · SLAM', icon: ScanEye },
-  { id: 'autonomy', label: 'Autonomy', detail: 'Learning · planning · safety', evidence: 'DDQN · RRT*', icon: Route },
-  { id: 'control', label: 'Control', detail: 'Commands · motion · feedback', evidence: 'Nav2 · ArduPilot', icon: Gauge },
-]
-
-const fallbackRepos: GithubRepo[] = [
-  { id: 1, name: 'ddqn-reach-avoid-rl', html_url: 'https://github.com/AjanM27/ddqn-reach-avoid-rl', description: 'DDQN for reach–avoid reinforcement learning with time-varying safe and target zones.', language: 'Python', pushed_at: '2026-10-20T11:37:17Z', fork: false },
-  { id: 2, name: 'isaac-sim-drone-autonomy', html_url: 'https://github.com/AjanM27/isaac-sim-drone-autonomy', description: 'Reproducible Isaac Sim, ArduPilot and ROS 2 drone autonomy stack.', language: 'Python', pushed_at: '2026-10-09T14:46:50Z', fork: false },
-  { id: 3, name: 'Multi-Robot-SLAM-Navigation', html_url: 'https://github.com/AjanM27/Multi-Robot-SLAM-Navigation', description: 'Collaborative multi-robot SLAM and navigation course project.', language: 'MATLAB', pushed_at: '2026-06-06T04:16:24Z', fork: true },
-]
-
-const publicUrl = (path: string) => path.startsWith('/') ? `${import.meta.env.BASE_URL}${path.slice(1)}` : path
-
-function useGithubRepos() {
-  const [repos, setRepos] = useState<GithubRepo[]>(fallbackRepos)
-  const [live, setLive] = useState(false)
-  useEffect(() => {
-    const controller = new AbortController()
-    fetch('https://api.github.com/users/AjanM27/repos?sort=pushed&direction=desc&per_page=30&type=owner', { signal: controller.signal, headers: { Accept: 'application/vnd.github+json' } })
-      .then((response) => { if (!response.ok) throw new Error('GitHub feed unavailable'); return response.json() as Promise<GithubRepo[]> })
-      .then((items) => {
-        const visible = items.filter((repo) => repo.description && !['AjanM27', 'ajan-portfolio', 'Inter_IIT'].includes(repo.name)).slice(0, 4)
-        if (visible.length) { setRepos(visible); setLive(true) }
-      })
-      .catch(() => setLive(false))
-    return () => controller.abort()
-  }, [])
-  return { repos, live }
-}
-
-function timeAgo(value: string) {
-  const days = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 86_400_000))
-  if (days === 0) return 'today'
-  if (days === 1) return 'yesterday'
-  if (days < 30) return `${days} days ago`
-  const months = Math.floor(days / 30)
-  return months === 1 ? '1 month ago' : `${months} months ago`
-}
-
 function ProjectMedia({ project }: { project: Project }) {
-  const [width, height] = project.imageSize
-  return <figure className="project-media" data-project={project.id}>
-    <div className="project-image">
-      <img src={publicUrl(project.image)} width={width} height={height} alt={project.mediaLabel} loading="lazy" decoding="async" />
-    </div>
-    <figcaption>
-      <span>{project.mediaLabel}</span>
-      {project.mediaSource && <a href={project.mediaSource} target="_blank" rel="noreferrer">Image source <ArrowUpRight size={12} /></a>}
-    </figcaption>
-  </figure>
+  if (!project.media) return null
+  const { src, width, height, label } = project.media
+  return (
+    <figure className="project-media" data-project={project.id}>
+      <div className="project-image">
+        <img src={publicUrl(src)} width={width} height={height} alt={label} loading="lazy" decoding="async" />
+      </div>
+      <figcaption>{label}</figcaption>
+    </figure>
+  )
+}
+
+function ProjectCase({ project }: { project: Project }) {
+  return (
+    <article id="project-case" className={project.media ? 'project-case' : 'project-case text-case'} role="tabpanel" aria-labelledby={`tab-${project.id}`}>
+      <header className="case-intro">
+        <p className="eyebrow">{project.domain}{project.collaborative && ' · Team project'}</p>
+        <h3>{project.title}</h3>
+        <p className="case-summary">{project.summary}</p>
+      </header>
+      {project.media && (
+        <div className="case-visuals">
+          <ProjectMedia project={project} />
+          {project.gallery && (
+            <div className="project-figures">
+              <h4>Research figures</h4>
+              <div className="project-figure-grid">
+                {project.gallery.map((figure) => (
+                  <a key={figure.src} href={figure.src}>
+                    <img src={figure.src} alt="" loading="lazy" />
+                    <span>{figure.label} <ArrowUpRight size={14} aria-hidden="true" /></span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+          {project.clips && (
+            <div className="project-figures">
+              <h4>Simulation clips</h4>
+              <div className="project-clip-grid">
+                {project.clips.map((clip) => (
+                  <figure key={clip.src}>
+                    <video controls muted playsInline preload="none" src={publicUrl(clip.src)} poster={publicUrl(clip.poster)} aria-label={clip.label} />
+                    <figcaption>{clip.label}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      <div className="case-content">
+        <dl className="case-decisions">
+          <div><dt>Problem</dt><dd>{project.challenge}</dd></div>
+          <div><dt>Implementation</dt><dd>{project.build}</dd></div>
+          <div><dt>Result</dt><dd>{project.outcome}</dd></div>
+          <div><dt>My contribution</dt><dd>{project.role}</dd></div>
+        </dl>
+        <ul className="tag-list" aria-label="Tools and methods">{project.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
+        <div className="project-sources" aria-label="Project evidence">
+          <a className="button button-dark" href={project.href}>{project.linkLabel ?? 'View source code'} <ArrowUpRight size={16} aria-hidden="true" /></a>
+          {project.evidenceLinks?.map((link) => (
+            <a className="evidence-link" key={link.url} href={publicUrl(link.url)}>{link.label} <ArrowUpRight size={14} aria-hidden="true" /></a>
+          ))}
+        </div>
+      </div>
+    </article>
+  )
 }
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [projectTab, setProjectTab] = useState<(typeof projectTabs)[number]['id']>('featured')
-  const [activeProjectId, setActiveProjectId] = useState('isaac-drone')
-  const [activeMethod, setActiveMethod] = useState(engineeringLoop[0].id)
-  const [activeSection, setActiveSection] = useState('home')
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const { repos, live } = useGithubRepos()
-  const selectedTab = projectTabs.find((tab) => tab.id === projectTab) ?? projectTabs[0]
-  const tabProjects = useMemo(() => selectedTab.projectIds.map((id) => projects.find((project) => project.id === id)).filter(Boolean) as Project[], [selectedTab])
-  const activeProject = tabProjects.find((project) => project.id === activeProjectId) ?? tabProjects[0]
-  const selectedMethod = engineeringLoop.find((item) => item.id === activeMethod) ?? engineeringLoop[0]
+  const [groupId, setGroupId] = useState(projectGroups[0].id)
+  const [projectId, setProjectId] = useState(projectGroups[0].projectIds[0])
+  const group = projectGroups.find((item) => item.id === groupId) ?? projectGroups[0]
+  const visibleProjects = group.projectIds.map((id) => projects.find((project) => project.id === id)!)
+  const activeProject = visibleProjects.find((project) => project.id === projectId) ?? visibleProjects[0]
 
   useEffect(() => {
-    if (!selectedTab.projectIds.includes(activeProjectId as never)) setActiveProjectId(selectedTab.projectIds[0])
-  }, [activeProjectId, selectedTab])
-
-  useEffect(() => {
-    const update = () => {
-      const height = document.documentElement.scrollHeight - window.innerHeight
-      setScrollProgress(height > 0 ? window.scrollY / height : 0)
-      document.documentElement.style.setProperty('--page-scroll', `${window.scrollY}px`)
+    let frame = 0
+    const showHash = () => {
+      const hash = window.location.hash
+      if (hash.startsWith('#project=')) {
+        const id = hash.slice('#project='.length)
+        const match = projectGroups.find((item) => item.projectIds.includes(id))
+        if (!match) return
+        setGroupId(match.id)
+        setProjectId(id)
+        cancelAnimationFrame(frame)
+        frame = requestAnimationFrame(focusWork)
+      }
     }
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    return () => window.removeEventListener('scroll', update)
+    showHash()
+    window.addEventListener('hashchange', showHash)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('hashchange', showHash)
+    }
   }, [])
 
-  useEffect(() => {
-    const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('is-visible')), { threshold: 0.1 })
-    document.querySelectorAll('.reveal').forEach((item) => revealObserver.observe(item))
-    const sectionObserver = new IntersectionObserver((entries) => {
-      const current = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-      if (current?.target.id) setActiveSection(current.target.id)
-    }, { rootMargin: '-24% 0px -64% 0px', threshold: [0.05, 0.25, 0.55] })
-    document.querySelectorAll('main > section[id]').forEach((section) => sectionObserver.observe(section))
-    return () => { revealObserver.disconnect(); sectionObserver.disconnect() }
-  }, [])
-
-  const handleHeroMove = (event: ReactMouseEvent<HTMLElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    event.currentTarget.style.setProperty('--mx', (((event.clientX - rect.left) / rect.width - 0.5) * 2).toFixed(2))
-    event.currentTarget.style.setProperty('--my', (((event.clientY - rect.top) / rect.height - 0.5) * 2).toFixed(2))
+  const selectProject = (id: string) => {
+    setProjectId(id)
+    window.history.replaceState(null, '', projectHash(id))
   }
-  const navigate = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); setMenuOpen(false) }
-  const navItems = [['about', 'About'], ['work', 'Work'], ['demos', 'Demos'], ['method', 'Method'], ['now', 'Now'], ['story', 'Journey']]
 
-  return <div className="site-shell">
-    <div className="scroll-progress" aria-hidden="true"><span style={{ transform: `scaleX(${scrollProgress})` }} /></div>
-    <header className="site-header">
-      <button className="wordmark" onClick={() => navigate('home')} aria-label="Back to top"><b>Ajan Muthuraj</b><small>Robotics systems</small></button>
-      <nav className={menuOpen ? 'nav-open' : ''} aria-label="Primary navigation">
-        {navItems.map(([id, label]) => <button key={id} className={activeSection === id ? 'active' : ''} onClick={() => navigate(id)}>{label}</button>)}
-      </nav>
-      <a className="header-cta" href={publicUrl(profile.resume)} download>Résumé <Download size={14} /></a>
-      <button className="menu-toggle" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
-    </header>
+  const selectGroup = (id: string) => {
+    const nextGroup = projectGroups.find((item) => item.id === id)
+    if (!nextGroup || id === groupId) return
+    setGroupId(id)
+    selectProject(nextGroup.projectIds[0])
+  }
 
-    <main>
-      <section id="home" className="hero-section" onMouseMove={handleHeroMove}>
-        <div className="hero-noise" aria-hidden="true" />
-        <div className="hero-copy reveal is-visible">
-          <p className="kicker"><span /> Systems Engineer at DLTX · IIT Madras</p>
-          <h1>Robotic systems<br />for environments<br /><em>that keep changing.</em></h1>
-          <p className="hero-lede">My work connects mechanics, sensing, computer vision, planning and control—from time-varying reach–avoid learning to aerial and multi-robot autonomy.</p>
-          <div className="hero-actions">
-            <button className="button primary-button" onClick={() => navigate('work')}>See the systems <ArrowDown size={17} /></button>
-            <a className="text-link" href={publicUrl(profile.resume)} download>Download résumé <Download size={15} /></a>
-          </div>
+  const handleTabKey = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const last = visibleProjects.length - 1
+    const keyTargets: Record<string, number> = {
+      ArrowRight: (index + 1) % visibleProjects.length,
+      ArrowLeft: (index + last) % visibleProjects.length,
+      Home: 0,
+      End: last,
+    }
+    const target = keyTargets[event.key]
+    if (target === undefined) return
+    event.preventDefault()
+    const id = visibleProjects[target].id
+    selectProject(id)
+    document.getElementById(`tab-${id}`)?.focus()
+  }
+
+  return (
+    <>
+      <a className="skip-link" href="#main">Skip to content</a>
+      <header className="site-header">
+        <div className="nav-inner">
+          <a className="wordmark" href="#home" onClick={() => setMenuOpen(false)}><span aria-hidden="true">AM</span> Ajan Muthuraj</a>
+          <button className="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded={menuOpen} aria-controls="site-nav" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
+          <nav id="site-nav" className={menuOpen ? 'is-open' : ''} aria-label="Primary navigation">
+            {navigation.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>)}
+            <a className="nav-resume" href={publicUrl(profile.resume)}>Résumé <Download size={15} aria-hidden="true" /></a>
+          </nav>
         </div>
-        <div className="hero-system-map reveal is-visible" aria-label="Five-layer robotics system cross-section">
-          <div className="map-topline"><span>ENGINEERING RANGE</span><b>PROJECT EVIDENCE</b></div>
-          <div className="map-axis"><span>PHYSICAL</span><i /><span>COMPUTATIONAL</span></div>
-          <div className="system-stack">
-            {systemLayers.map((layer, index) => {
-              const Icon = layer.icon
-              return <div className="system-layer" key={layer.id} style={{ '--layer': index } as CSSProperties}>
-                <span>{String(index + 1).padStart(2, '0')}</span><div className="layer-icon"><Icon size={19} /></div><div><b>{layer.label}</b><small>{layer.detail}</small></div><em>{layer.evidence}</em>
+      </header>
+
+      <main id="main" tabIndex={-1}>
+        <section id="home" className="hero-section">
+          <div className="wrap hero-layout">
+            <div className="hero-copy">
+              <p className="eyebrow hero-location"><span aria-hidden="true" /> Japan · Systems Engineer at Dai-ichi Life Techno Cross</p>
+              <h1>Ajan Muthuraj</h1>
+              <p className="hero-specialty">Robotics &amp; autonomy</p>
+              <p className="hero-lede">I like taking a robotics idea far enough to see where it breaks. I’ve worked across mechanisms, electronics and software, from a gesture-controlled rover to ROS 2 systems for drone exploration and manipulation.</p>
+              <div className="hero-actions">
+                <a className="button button-accent" href="#work">Explore projects <ArrowDown size={17} aria-hidden="true" /></a>
+                <a className="button button-outline" href={publicUrl(profile.resume)}>View résumé <ArrowUpRight size={16} aria-hidden="true" /></a>
               </div>
-            })}
+            </div>
+            <aside className="hero-proof" aria-labelledby="proof-title">
+              <h2 id="proof-title" className="eyebrow">Three projects to start with</h2>
+              {highlights.map((item, index) => (
+                <a className="proof-link" href={projectHash(item.id)} key={item.id} onClick={reopenProject}>
+                  <span className="proof-index" aria-hidden="true">0{index + 1}</span>
+                  <span className="proof-copy"><small>{item.label}</small><strong>{item.title}</strong><span>{item.detail}</span></span>
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </a>
+              ))}
+            </aside>
           </div>
-          <div className="map-footer"><span>ONE SYSTEM, FIVE DISCIPLINES</span><p>Examples are drawn from the projects below.</p></div>
-        </div>
-        <button className="scroll-cue" onClick={() => navigate('about')}><span>Continue</span><ArrowDown size={16} /></button>
-      </section>
+        </section>
 
-      <section id="about" className="about-section section-pad">
-        <div className="about-photo reveal">
-          <img src={publicUrl('/media/ajan-graduation.webp')} alt="Ajan Muthuraj at IIT Madras graduation" loading="lazy" decoding="async" width="1200" height="1600" />
-          <div className="photo-meta"><span>CHENNAI · 2026</span><strong>IIT Madras graduate</strong></div>
-        </div>
-        <div className="about-copy reveal">
-          <p className="section-index">01 / ABOUT</p>
-          <h2>Mechanical by training.<br /><em>Systems-minded by practice.</em></h2>
-          <div className="about-body">
-            <p>I graduated from IIT Madras with a B.Tech in Mechanical Engineering and a CGPA of 8.52/10. I now work as a Systems Engineer at Dai-ichi Life Techno Cross in Japan.</p>
-            <p>I work on problems where uncertainty is part of the specification: moving obstacles, imperfect maps, delayed communication and noisy sensing. I test how information and commands cross subsystem boundaries, because that is where otherwise good components often fail together.</p>
+        <section id="work" className="work-section section-pad">
+          <div className="wrap">
+            <div className="section-heading">
+              <div><p className="eyebrow">01 / Portfolio</p><h2 id="work-title" tabIndex={-1}>Selected projects</h2></div>
+              <p>Explore the implementation, my contribution and the results. Each project links to the evidence available for it.</p>
+            </div>
+            <div className="project-filters" role="group" aria-label="Filter projects">
+              {projectGroups.map((item) => <button type="button" key={item.id} aria-pressed={groupId === item.id} onClick={() => selectGroup(item.id)}>{item.label}</button>)}
+            </div>
+            <div className="project-selector" role="tablist" aria-label={`${group.label} projects`}>
+              {visibleProjects.map((project, index) => (
+                <button key={project.id} type="button" role="tab" id={`tab-${project.id}`} aria-selected={project.id === activeProject.id} aria-controls="project-case" tabIndex={project.id === activeProject.id ? 0 : -1} onClick={() => selectProject(project.id)} onKeyDown={(event) => handleTabKey(event, index)}>
+                  {project.shortTitle}<ArrowRight size={15} aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+            <ProjectCase key={activeProject.id} project={activeProject} />
           </div>
-          <div className="about-facts">
-            <div><GraduationCap /><span>Education</span><strong>IIT Madras · B.Tech Mechanical Engineering</strong></div>
-            <div><Award /><span>Research</span><strong>ICRA 2026 XPLORE Workshop poster</strong></div>
-            <div><BriefcaseBusiness /><span>Current role</span><strong>Systems Engineer · DLTX, Japan</strong></div>
-          </div>
-          <div className="about-actions"><a className="button dark-button" href={publicUrl(profile.resume)} download>Download résumé <Download size={16} /></a><a className="inline-link" href={profile.linkedin} target="_blank" rel="noreferrer">Full profile <ArrowUpRight size={15} /></a></div>
-        </div>
-      </section>
+        </section>
 
-      <section id="work" className="work-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">02 / SELECTED WORK</p><h2>Selected work,<br /><em>with the decisions visible.</em></h2><p>Each case separates the engineering problem, my contribution and the reported result. Collaborative work is labelled explicitly.</p></div>
-        <div className="project-tabs reveal" role="tablist" aria-label="Project categories">
-          {projectTabs.map((tab) => <button key={tab.id} role="tab" aria-selected={projectTab === tab.id} className={projectTab === tab.id ? 'active' : ''} onClick={() => setProjectTab(tab.id)}><span>{tab.label}</span><small>{String(tab.projectIds.length).padStart(2, '0')}</small></button>)}
-        </div>
-        <div className="project-selector reveal" role="tablist" aria-label={`${selectedTab.label} projects`}>
-          {tabProjects.map((project) => <button key={project.id} role="tab" aria-selected={activeProject.id === project.id} aria-controls="project-case" className={activeProject.id === project.id ? 'active' : ''} onClick={() => setActiveProjectId(project.id)}><span>{project.index}</span><b>{project.shortTitle}</b><small>{project.domain}</small><i /></button>)}
-        </div>
-        <article id="project-case" className="project-case" key={activeProject.id} role="tabpanel">
-          <header className="case-intro">
-            <div className="case-heading"><p>{activeProject.domain}{activeProject.collaborative ? ' · team work' : ''}</p><span>{activeProject.index} / {String(projects.length).padStart(2, '0')}</span></div>
-            <h3>{activeProject.title}</h3>
-            <p className="case-summary">{activeProject.summary}</p>
-          </header>
-          <div className="case-visuals">
-            <ProjectMedia project={activeProject} />
-            {activeProject.gallery && <div className="project-figures"><h4>Actual project figures</h4><div className="project-figure-grid">{activeProject.gallery.map((figure) => <a key={figure.src} href={figure.src} target="_blank" rel="noreferrer"><img src={figure.src} alt={figure.label} loading="lazy" /><span>{figure.label} <ArrowUpRight size={13} /></span></a>)}</div></div>}
-            {activeProject.clips && (
-              <div className="project-figures">
-                <h4>Simulation clips</h4>
-                <div className="project-clip-grid">
-                  {activeProject.clips.map((clip) => (
-                    <figure key={clip.src}>
-                      <video controls muted playsInline preload="none" src={publicUrl(clip.src)} poster={publicUrl(clip.poster)} aria-label={clip.label} />
-                      <figcaption>{clip.label}</figcaption>
-                    </figure>
-                  ))}
-                </div>
+        <section id="about" className="about-section section-pad">
+          <div className="wrap about-layout">
+            <div className="about-copy">
+              <p className="eyebrow">02 / About me</p>
+              <h2>Why I like robotics</h2>
+              <p>I studied mechanical engineering at IIT Madras. As a Systems Engineer at Dai-ichi Life Techno Cross in Japan, I’m building experience in enterprise software architecture and backend development. Robotics is where I get to follow a problem all the way from a noisy sensor reading to what a mechanism actually does.</p>
+              <p>In an early rover project, that meant turning IMU and flex-sensor readings into motor and servo commands. At e-Yantra, it meant getting an eBot to dock and a UR5 to pick up a package. I like learning unfamiliar tools quickly, and building something with them is how I find out what I’ve understood.</p>
+              <blockquote>“Anything can be learnt.”</blockquote>
+              <div className="inline-links">
+                <a href="https://github.com/AjanM27/Gesture-Controlled-Defence-Rover">Rover architecture and Arduino sketches <ArrowUpRight size={15} aria-hidden="true" /></a>
+                <a href={projectHash('swarm-rescue')} onClick={reopenProject}>Swarm Rescue competition and ICRA poster <ArrowRight size={15} aria-hidden="true" /></a>
               </div>
-            )}
-          </div>
-          <div className="case-content">
-            <div className="case-decisions">
-              <div><span>THE PROBLEM</span><p>{activeProject.challenge}</p></div>
-              <div><span>WHAT I BUILT</span><p>{activeProject.build}</p></div>
-              <div><span>EVIDENCE</span><p>{activeProject.outcome}</p></div>
-              <div><span>MY SCOPE</span><p>{activeProject.role}</p></div>
             </div>
-            {activeProject.evidenceLinks && <div className="project-sources"><h4>Supporting evidence</h4>{activeProject.evidenceLinks.map((link) => <a key={link.url} href={publicUrl(link.url)} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}</div>}
-            <div className="case-footer"><div className="tag-list">{activeProject.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><a className="button dark-button" href={activeProject.href} target="_blank" rel="noreferrer">Inspect evidence <ArrowUpRight size={16} /></a></div>
+            <figure className="about-photo">
+              <img src={publicUrl('/media/ajan-graduation.webp')} alt="Ajan Muthuraj at his IIT Madras graduation" loading="lazy" decoding="async" width="1200" height="1600" />
+              <figcaption>IIT Madras · B.Tech, Mechanical Engineering</figcaption>
+            </figure>
           </div>
-        </article>
-      </section>
+        </section>
 
-      <section id="demos" className="demo-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">PROJECT DEMOS</p><h2>Robotics simulations</h2><p>Full recordings from the nine-drone and hospital humanoid projects.</p></div>
-        <div className="demo-grid">
-          {demos.map((video) =>
-            <a className="demo-card" href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noreferrer" key={video.id} data-project={video.projectId}>
-              <div className="demo-thumb"><img src={publicUrl(video.thumbnail)} loading="lazy" alt="" /></div>
-              <div className="demo-copy"><b>{video.title}</b><span>Watch on YouTube <ArrowUpRight size={15} /></span></div>
-            </a>
-          )}
-        </div>
-      </section>
-
-      <section id="method" className="method-section section-pad">
-        <div className="method-layout">
-          <div className="method-intro reveal"><p className="section-index">03 / ENGINEERING METHOD</p><h2>How I approach<br /><em>robotics problems.</em></h2><p>Four steps I use to make the work testable and the results easier to inspect.</p></div>
-          <div className="method-console reveal">
-            <div className="method-tabs" role="tablist" aria-label="Engineering method">
-              {engineeringLoop.map((item) => <button key={item.id} role="tab" aria-selected={activeMethod === item.id} aria-controls="method-readout" className={activeMethod === item.id ? 'active' : ''} onClick={() => setActiveMethod(item.id)}><span>{item.eyebrow.slice(0, 2)}</span><b>{item.label}</b><ArrowUpRight size={15} /></button>)}
+        <section id="interests" className="interests-section section-pad">
+          <div className="wrap">
+            <div className="section-heading">
+              <div><p className="eyebrow">03 / What I want to explore</p><h2>Questions I keep coming back to</h2></div>
+              <p>These are the problems I’d like to spend more time on. Each starts from something I’ve built or studied.</p>
             </div>
-            <div id="method-readout" className="method-readout" key={selectedMethod.id} role="tabpanel">
-              <p>{selectedMethod.eyebrow}</p><h3>{selectedMethod.principle}</h3><div className="method-detail"><span>PRACTICE</span><p>{selectedMethod.practice}</p></div><div className="method-detail evidence"><span>FROM THE WORK</span><p>{selectedMethod.evidence}</p></div><div className="method-tools">{selectedMethod.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
+            <div className="interest-grid">
+              {interests.map((item) => (
+                <details key={item.title}>
+                  <summary>{item.title}</summary>
+                  <p>{item.question}</p>
+                  <a className="evidence-link" href={projectHash(item.projectId)} onClick={reopenProject}>{item.linkLabel} <ArrowRight size={15} aria-hidden="true" /></a>
+                </details>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="principle-section section-pad reveal" aria-label="Engineering principle">
-        <p className="section-index">04 / WORKING RULE</p>
-        <blockquote>“The handoff is part of the system.”</blockquote>
-        <div><span>IN PRACTICE</span><p>A planner is only as useful as the map it reads, the timing it keeps and the mechanism that executes it. I test those boundaries explicitly.</p></div>
-      </section>
-
-      <section id="now" className="now-section section-pad">
-        <div className="section-heading reveal"><p className="section-index">05 / RECENT PUBLIC WORK</p><h2>Latest repositories,<br /><em>direct from GitHub.</em></h2><p>The feed uses the GitHub API and shows described public repositories by most recent push. Private work is not included.</p></div>
-        <div className="live-status reveal"><span className={live ? 'pulse live' : 'pulse'} />{live ? 'GitHub API connected' : 'Curated fallback · GitHub API unavailable'}<small>public activity only</small></div>
-        <div className="repo-grid">{repos.map((repo, index) => <a className="repo-card reveal" href={repo.html_url} target="_blank" rel="noreferrer" key={repo.id} style={{ '--delay': `${index * 80}ms` } as CSSProperties}><div><Code2 size={20} /><span>{repo.fork ? 'COLLABORATIVE / FORK' : 'PUBLIC REPOSITORY'}</span><ArrowUpRight size={17} /></div><h3>{repo.name.replaceAll('-', ' ')}</h3><p>{repo.description || 'Public robotics and engineering work on GitHub.'}</p><footer><span>{repo.language || 'Mixed'}</span><time dateTime={repo.pushed_at}>Pushed {timeAgo(repo.pushed_at)}</time></footer></a>)}</div>
-        <a className="all-work-link reveal" href={`${profile.github}?tab=repositories`} target="_blank" rel="noreferrer">Browse all repositories <ArrowUpRight /></a>
-      </section>
-
-      <section id="story" className="story-section section-pad">
-        <div className="journey-layout">
-          <div className="journey-intro reveal"><p className="section-index">06 / TRAJECTORY</p><h2>Education, research<br /><em>and industry.</em></h2><p>A concise record of the roles and projects that shaped how I work.</p></div>
-          <div className="journey-list">{milestones.map((item, index) => <article className={`journey-item reveal${item.current ? ' current' : ''}`} key={`${item.year}-${item.title}`}><div className="journey-track"><span>{String(index + 1).padStart(2, '0')}</span><i /></div><div className="journey-card"><header><time>{item.year}</time><span>{item.tag}</span>{item.current && <b>NOW</b>}</header><h3>{item.title}</h3><p>{item.copy}</p></div></article>)}</div>
-        </div>
-      </section>
-
-      <section id="contact" className="contact-section section-pad reveal">
-        <p className="section-index">07 / CONTACT</p><div><h2>Working on a robot<br />that must <em>leave the lab?</em></h2><p>I’m interested in robotics software, autonomy, multi-robot systems, motion planning and research-engineering work.</p></div>
-        <a className="contact-orb" href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}><Mail size={28} /><span>Start a conversation</span><ArrowUpRight /></a>
-        <div className="contact-links"><a href={profile.github} target="_blank" rel="noreferrer"><Code2 /> GitHub</a><a href={profile.linkedin} target="_blank" rel="noreferrer"><UserRound /> LinkedIn</a><a href={publicUrl(profile.resume)} download><Download /> Résumé</a><a href={`mailto:${profile.email}`}><Mail /> {profile.email}</a></div>
-      </section>
-    </main>
-    <footer className="site-footer"><span>© {new Date().getFullYear()} {profile.name}</span><span><CircleDot size={13} /> Robotics · autonomy · systems</span><button onClick={() => navigate('home')}>Back to top <ArrowUpRight size={14} /></button></footer>
-  </div>
+        <section id="contact" className="contact-section section-pad">
+          <div className="wrap contact-layout">
+            <div><p className="eyebrow">04 / Contact</p><h2>Get in touch</h2><p>I’m interested in robotics software, autonomy and integration roles, especially where I can work across perception, planning and control.</p></div>
+            <div className="contact-links">
+              <a className="button button-accent" href={`mailto:${profile.email}`}>Email me <ArrowUpRight size={16} aria-hidden="true" /></a>
+              <a href={profile.github}>GitHub <ArrowUpRight size={15} aria-hidden="true" /></a>
+              <a href={profile.linkedin}>LinkedIn <ArrowUpRight size={15} aria-hidden="true" /></a>
+              <a href={publicUrl(profile.resume)}>Résumé <Download size={15} aria-hidden="true" /></a>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className="wrap site-footer"><span>Ajan Muthuraj · Japan</span><a href="#home">Back to top ↑</a></footer>
+    </>
+  )
 }
 
 export default App
