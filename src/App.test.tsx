@@ -58,15 +58,19 @@ describe('portfolio interactions', () => {
     expect(window.location.hash).toBe('#project=collective-navigation')
   })
 
-  it('lists all projects and shows a still illustration for Adaptive RRT*', () => {
+  it('lists all projects and shows the Adaptive RRT* capture and schematic', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: 'All projects' }))
     expect(screen.getAllByRole('tab')).toHaveLength(14)
     fireEvent.click(screen.getByRole('tab', { name: 'Adaptive RRT*' }))
-    expect(screen.getByRole('img', { name: /Illustration of the replanning strategy/ })).toHaveAttribute('src', expect.stringMatching(/adaptive-rrt-replanning\.svg$/))
+    expect(screen.getByRole('img', { name: /Original planner capture/ })).toHaveAttribute('src', expect.stringMatching(/adaptive-rrt-simulation\.webp$/))
+    expect(screen.getByRole('link', { name: /Replanning schematic/ })).toHaveAttribute('href', `${import.meta.env.BASE_URL}media/adaptive-rrt-replanning.svg`)
     fireEvent.click(screen.getByRole('button', { name: 'Embedded & controls' }))
     fireEvent.click(screen.getByRole('tab', { name: 'GeoGuide rover' }))
-    expect(screen.getByRole('heading', { name: 'GeoGuide overhead-vision rover' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'GeoGuide · The Vision-Guided Rover' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('tab', { name: 'Gesture rover' }))
+    expect(screen.getByRole('img', { name: /AI illustration based on the four-wheel rover/ })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Original rover and arm prototype photo/ })).toHaveAttribute('href', `${import.meta.env.BASE_URL}media/gesture-rover-prototype.webp`)
   })
 
   it('makes the résumé and learning interests easy to find', () => {

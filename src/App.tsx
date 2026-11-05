@@ -31,9 +31,9 @@ function ProjectMedia({ project }: { project: Project }) {
   const { src, width, height, label } = project.media
   return (
     <figure className="project-media" data-project={project.id}>
-      <div className="project-image">
+        <a className="project-image" href={publicUrl(src)} target="_blank" rel="noreferrer">
         <img src={publicUrl(src)} width={width} height={height} alt={label} loading="lazy" decoding="async" />
-      </div>
+        </a>
       <figcaption>{label}</figcaption>
     </figure>
   )
@@ -52,11 +52,11 @@ function ProjectCase({ project }: { project: Project }) {
           <ProjectMedia project={project} />
           {project.gallery && (
             <div className="project-figures">
-              <h4>Research figures</h4>
+              <h4>Supporting visuals</h4>
               <div className="project-figure-grid">
                 {project.gallery.map((figure) => (
-                  <a key={figure.src} href={figure.src}>
-                    <img src={figure.src} alt="" loading="lazy" />
+                  <a key={figure.src} href={publicUrl(figure.src)} target="_blank" rel="noreferrer">
+                    <img src={publicUrl(figure.src)} alt="" loading="lazy" />
                     <span>{figure.label} <ArrowUpRight size={14} aria-hidden="true" /></span>
                   </a>
                 ))}
